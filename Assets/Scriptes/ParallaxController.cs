@@ -21,6 +21,6 @@ public class ParallaxController : MonoBehaviour
     void Update()
     {
         //On veut changer l'offset de la texture en fonction de la position de la cible
-        _mat.mainTextureOffset = new Vector2(_target.position.x / _ParalaxFactor, _target.position.y / _ParalaxFactor);
+        _mat.mainTextureOffset = new Vector2(_target.position.x / _ParalaxFactor, 0);
     }
 }
