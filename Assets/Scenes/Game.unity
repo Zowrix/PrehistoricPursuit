@@ -51595,30 +51595,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 1351792393}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd817223d5029c0478671974c1eee07d, type: 3}
+  m_Script: {fileID: 11500000, guid: 5c5038c62f5b2754099004964087355b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _vitesseMarche: 5
   _vitesseCourse: 5
-  _puissanceSaut: 10
-  _puissanceGrimpe: 10
-  _puissanceChampignon: 15
+  _puissanceSaut: 7
+  _vitesseSlide: 5
   _groundCheck: {fileID: 1586011174}
   _presenceSol:
     serializedVersion: 2
     m_Bits: 64
-  _champignonCheck:
-    serializedVersion: 2
-    m_Bits: 256
   _wallCheck: {fileID: 1234940894}
   _presenceMur:
     serializedVersion: 2
     m_Bits: 128
   _solPrincipale: 0
   _MurGrimper: 0
-  _champignon: 0
   _doubleSaut: 0
   _canjump: 1
+  _glisser: 0
+  _puissanceChampignon: 15
+  _champignonCheck:
+    serializedVersion: 2
+    m_Bits: 256
+  _champignon: 0
 --- !u!1 &1540756965
 GameObject:
   m_ObjectHideFlags: 0

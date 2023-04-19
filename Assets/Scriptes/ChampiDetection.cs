@@ -9,8 +9,8 @@ public class ChampiDetection : MonoBehaviour
     private void Start()
     {
 
-        Heroloury.onPlayerTouchingMushroom += ActivateMushroomAnimation;
-        Heroloury.onPlayerExitMushroom += DeactivateMushroomAnimation;
+        Hero.onPlayerTouchingMushroom += ActivateMushroomAnimation;
+        Hero.onPlayerExitMushroom += DeactivateMushroomAnimation;
     }
 
     private void ActivateMushroomAnimation()
@@ -22,7 +22,5 @@ public class ChampiDetection : MonoBehaviour
     private void DeactivateMushroomAnimation()
     {
         animator.SetBool("isChampiTrigger", false);
-
-        Debug.Log(animator);
     }
 }

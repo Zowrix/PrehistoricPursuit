@@ -26,13 +26,19 @@ public class Hero : MonoBehaviour
     private bool _grimper = false;
     [SerializeField] private bool _solPrincipale = false;
     [SerializeField] private bool _MurGrimper = false;
-
-
     [SerializeField] private bool _doubleSaut = false;
     [SerializeField] private bool _canjump = true;
     [SerializeField] private bool _glisser = false;
 
+    [Header("Champignon")]
+    [SerializeField] private float _puissanceChampignon = 15f;
+    [SerializeField] private LayerMask _champignonCheck;
+    [SerializeField] private bool _champignon = false;
 
+    public delegate void OnPlayerTouchingMushroom();
+    public static event OnPlayerTouchingMushroom onPlayerTouchingMushroom;
+    public delegate void OnPlayerExitMushroom();
+    public static event OnPlayerExitMushroom onPlayerExitMushroom;
 
     // Start is called before the first frame update
     void Start()
@@ -51,6 +57,10 @@ public class Hero : MonoBehaviour
 
         _MurGrimper = colliderGrimper != null;
 
+
+        Collider2D colliderChampignon = Physics2D.OverlapCircle(_groundCheck.position, 0.25f, _champignonCheck);
+
+        _champignon = colliderChampignon != null;
 
         _hDirection = Input.GetAxisRaw("Horizontal");
         _vDirection = Input.GetAxis("Vertical");
@@ -79,6 +89,18 @@ public class Hero : MonoBehaviour
                 _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
 
             }
+        }
+
+        if (_champignon)
+        {
+            _canjump = false;
+            _doubleSaut = true;
+            _body.velocity = new Vector2(_body.velocity.x, _puissanceChampignon);
+            onPlayerTouchingMushroom?.Invoke();
+        }
+        else
+        {
+            onPlayerExitMushroom?.Invoke();
         }
 
         if (_MurGrimper && !_solPrincipale)
