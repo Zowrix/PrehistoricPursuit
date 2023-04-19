@@ -26,7 +26,7 @@ using System.Threading;
 public class SerialController : MonoBehaviour
 {
     [Tooltip("Port name with which the SerialPort object will be created.")]
-    public string portName = "COM3";
+    public string portName = "COM4";
 
     [Tooltip("Baud rate that the serial device is using to transmit data.")]
     public int baudRate = 9600;
@@ -63,8 +63,8 @@ public class SerialController : MonoBehaviour
     // ------------------------------------------------------------------------
     void OnEnable()
     {
-        serialThread = new SerialThreadLines(portName, 
-                                             baudRate, 
+        serialThread = new SerialThreadLines(portName,
+                                             baudRate,
                                              reconnectionDelay,
                                              maxUnreadMessages);
         thread = new Thread(new ThreadStart(serialThread.RunForever));
@@ -118,12 +118,12 @@ public class SerialController : MonoBehaviour
             return;
 
         // Check if the message is plain data or a connect/disconnect event.
-        if (ReferenceEquals(message, SERIAL_DEVICE_CONNECTED))
-            messageListener.SendMessage("OnConnectionEvent", true);
-        else if (ReferenceEquals(message, SERIAL_DEVICE_DISCONNECTED))
-            messageListener.SendMessage("OnConnectionEvent", false);
+        //if (ReferenceEquals(message, SERIAL_DEVICE_CONNECTED))
+        //messageListener.SendMessage("OnConnectionEvent", true);
+        //else if (ReferenceEquals(message, SERIAL_DEVICE_DISCONNECTED))
+        //messageListener.SendMessage("OnConnectionEvent", false);
         else
-            messageListener.SendMessage("OnMessageArrived", message);
+            messageListener.SendMessage("LancementenFonctionDuId", message);
     }
 
     // ------------------------------------------------------------------------

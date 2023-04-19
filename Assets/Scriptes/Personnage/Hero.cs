@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Hero : MonoBehaviour
 {
+    private string _rfidId;
 
     [SerializeField] private float _vitesseMarche = 5f;
     [SerializeField] private float _vitesseCourse = 5f;
     [SerializeField] private float _puissanceSaut = 7f;
     [SerializeField] private float _vitesseSlide = 5f;
-
 
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private LayerMask _presenceSol;
@@ -44,11 +44,37 @@ public class Hero : MonoBehaviour
     void Start()
     {
         _body = GetComponent<Rigidbody2D>();
+
+        ReadRFID();
+    }
+
+
+    public void ReadRFID()
+    {
+        _rfidId = "";
+
+        LancementenFonctionDuId(_rfidId);
+
+        Debug.Log("ID RFID: " + _rfidId);
+    }
+
+    public void LancementenFonctionDuId(string id)
+    {
+        if (id == " 69 231 137 172")
+        {
+            Debug.Log("T'es gros");
+        }
+        else
+        {
+            Debug.Log(id);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+
+
         Collider2D collider = Physics2D.OverlapCircle(_groundCheck.position, 0.25f, _presenceSol);
 
         _solPrincipale = collider != null;
