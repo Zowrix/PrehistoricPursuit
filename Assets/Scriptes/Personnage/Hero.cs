@@ -8,7 +8,8 @@ public class Hero : MonoBehaviour
     [SerializeField] private float _vitesseMarche = 5f;
     [SerializeField] private float _vitesseCourse = 5f;
     [SerializeField] private float _puissanceSaut = 7f;
-    [SerializeField] private float _puissanceGrimpe = 10f;
+    [SerializeField] private float _vitesseSlide = 5f;
+
 
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private LayerMask _presenceSol;
@@ -16,19 +17,20 @@ public class Hero : MonoBehaviour
     [SerializeField] private Transform _wallCheck;
     [SerializeField] private LayerMask _presenceMur;
 
-
-
     private Rigidbody2D _body;
 
     private float _hDirection = 0;
+    private float _vDirection = 0;
 
     private bool _courir = false;
     private bool _grimper = false;
     [SerializeField] private bool _solPrincipale = false;
     [SerializeField] private bool _MurGrimper = false;
 
+
     [SerializeField] private bool _doubleSaut = false;
     [SerializeField] private bool _canjump = true;
+    [SerializeField] private bool _glisser = false;
 
 
 
@@ -45,17 +47,17 @@ public class Hero : MonoBehaviour
 
         _solPrincipale = collider != null;
 
-        Collider2D colliderMur = Physics2D.OverlapCircle(_wallCheck.position, 0.25f, _presenceMur);
+        Collider2D colliderGrimper = Physics2D.OverlapCircle(_wallCheck.position, 0.25f, _presenceMur);
 
-        _MurGrimper = colliderMur != null;
+        _MurGrimper = colliderGrimper != null;
 
 
         _hDirection = Input.GetAxisRaw("Horizontal");
+        _vDirection = Input.GetAxis("Vertical");
+
 
         _courir = Input.GetAxisRaw("Courir") != 0;
         _grimper = Input.GetAxisRaw("Grimper") != 0;
-
-
 
         if (_hDirection != 0)
         {
@@ -70,20 +72,28 @@ public class Hero : MonoBehaviour
                 _doubleSaut = true;
                 _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
             }
-            else if (_doubleSaut)
+
+            if (_doubleSaut)
             {
                 _doubleSaut = false;
                 _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
 
             }
-
-            if (_solPrincipale)
-            {
-                _canjump = true;
-            }
         }
 
+        if (_MurGrimper && !_solPrincipale)
+        {
+            _glisser = true;
+        }
+        else
+        {
+            _glisser = false;
+        }
 
+        if (_glisser)
+        {
+            _body.velocity = new Vector2(0, _vitesseSlide * _vDirection);
+        }
 
 
     }
@@ -100,12 +110,12 @@ public class Hero : MonoBehaviour
 
         }
 
-        if (_MurGrimper && _grimper)
+
+
+        if (_solPrincipale)
         {
-            Debug.Log("marche");
+            _canjump = true;
         }
-
-
 
 
 
