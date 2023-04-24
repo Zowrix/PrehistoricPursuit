@@ -40,10 +40,14 @@ public class Heroloury : MonoBehaviour
     public delegate void OnPlayerExitMushroom();
     public static event OnPlayerExitMushroom onPlayerExitMushroom;
 
+    [SerializeField] private LayerMask _plateformeMouvante;
+    [SerializeField] private bool _joueurSurPlateforme = false;
+
     // Start is called before the first frame update
     void Start()
     {
         _body = GetComponent<Rigidbody2D>();
+
     }
 
     // Update is called once per frame
@@ -61,6 +65,18 @@ public class Heroloury : MonoBehaviour
         Collider2D colliderChampignon = Physics2D.OverlapCircle(_groundCheck.position, 0.25f, _champignonCheck);
 
         _champignon = colliderChampignon != null;
+
+        Collider2D colliderPlatform = Physics2D.OverlapCircle(_groundCheck.position, 0.25f, _plateformeMouvante);
+
+        if (colliderPlatform != null)
+        {
+            transform.parent = colliderPlatform.transform;
+        }
+        else
+        {
+            transform.SetParent(null);
+        }
+        _joueurSurPlateforme = colliderPlatform != null;
 
 
         _hDirection = Input.GetAxisRaw("Horizontal");
@@ -135,9 +151,10 @@ public class Heroloury : MonoBehaviour
 
 
 
-        if (_solPrincipale)
+        if (_solPrincipale || _joueurSurPlateforme)
         {
             _canjump = true;
+
         }
 
 
