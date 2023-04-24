@@ -29,9 +29,10 @@ public class Hero : MonoBehaviour
     private bool _grimper = false;
     [SerializeField] private bool _solPrincipale = false;
     [SerializeField] private bool _MurGrimper = false;
-    [SerializeField] private bool _doubleSaut = false;
+    private bool _doubleSaut = false;
+    private bool _doubleSautRFID = false;
     [SerializeField] private bool _canjump = true;
-    [SerializeField] private bool _glisser = false;
+    private bool _glisser = false;
     private bool _retréci = false;
 
     [Header("Champignon")]
@@ -49,25 +50,23 @@ public class Hero : MonoBehaviour
     {
         _body = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
-
-        ReadRFID();
     }
 
-
-    public void ReadRFID()
-    {
-        _rfidId = "";
-
-        LancementenFonctionDuId(_rfidId);
-
-        Debug.Log("ID RFID: " + _rfidId);
-    }
 
     public void LancementenFonctionDuId(string id)
     {
         if (id == " 69 231 137 172")
         {
-            Debug.Log("T'es gros");
+            if (_doubleSautRFID == false)
+            {
+                _doubleSautRFID = true;
+                Debug.Log(_doubleSautRFID);
+            }
+            else
+            {
+                _doubleSautRFID = false;
+                Debug.Log(_doubleSautRFID);
+            }
         }
         else
         {
@@ -107,20 +106,36 @@ public class Hero : MonoBehaviour
 
         if (Input.GetButtonDown("Sauter"))
         {
-            if (_canjump)
+            if (_canjump && !_doubleSautRFID && _solPrincipale)
             {
                 _canjump = false;
-                _doubleSaut = true;
+                _solPrincipale = false;
                 _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
+                Debug.Log(_canjump);
             }
 
-            if (_doubleSaut)
+            if (_doubleSautRFID)
             {
-                _doubleSaut = false;
-                _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
+                Debug.Log("Double");
 
+                if (_canjump)
+                {
+                    _canjump = false;
+                    _doubleSaut = true;
+                    _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
+                    Debug.Log("Je suis la");
+                }
+
+                if (_doubleSaut)
+                {
+                    _doubleSaut = false;
+                    _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
+                    Debug.Log("Je suis la 2");
+                }
             }
         }
+
+
 
         if (_champignon)
         {
@@ -189,12 +204,13 @@ public class Hero : MonoBehaviour
 
         }
 
-
-
         if (_solPrincipale)
         {
             _canjump = true;
+            Debug.Log(_solPrincipale);
         }
+
+
 
 
 
