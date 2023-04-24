@@ -147,7 +147,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 102750670}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.491, y: 0.016, z: 0}
+  m_LocalPosition: {x: 0.588, y: -0.136, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -289,7 +289,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 280404925}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.09, y: -1.14, z: 0}
+  m_LocalPosition: {x: 0.0864, y: -1.461, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -787,8 +787,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.14205724, y: 0.104056835}
-  m_Size: {x: 1.4957453, y: 2.506545}
+  m_Offset: {x: 0.058823705, y: 0.03803134}
+  m_Size: {x: 1.2644279, y: 2.9774184}
   m_Direction: 0
 --- !u!50 &1988849771
 Rigidbody2D:
@@ -801,11 +801,11 @@ Rigidbody2D:
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
+  m_UseAutoMass: 1
+  m_Mass: 3.4216304
   m_LinearDrag: 0
   m_AngularDrag: 7
-  m_GravityScale: 1
+  m_GravityScale: 2
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -872,7 +872,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 372804795, guid: ad4934b7b1c1fbe49bf5135750bedf11, type: 3}
+  m_Sprite: {fileID: 710244336, guid: 102a6f1816a857242ac211778a5cb4f9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -913,9 +913,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _vitesseMarche: 5
-  _vitesseCourse: 5
+  _vitesseCourse: 10
   _puissanceSaut: 10
-  _vitesseSlide: 10
+  _vitesseSlide: 5
+  _tailleNormale: 1
+  "_tailleR\xE9tr\xE9cie": 0.5
   _groundCheck: {fileID: 280404926}
   _presenceSol:
     serializedVersion: 2
@@ -926,9 +928,7 @@ MonoBehaviour:
     m_Bits: 128
   _solPrincipale: 0
   _MurGrimper: 0
-  _doubleSaut: 0
   _canjump: 1
-  _glisser: 0
   _puissanceChampignon: 15
   _champignonCheck:
     serializedVersion: 2
