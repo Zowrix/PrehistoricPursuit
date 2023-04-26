@@ -917,7 +917,7 @@ MonoBehaviour:
   _puissanceSaut: 10
   _vitesseSlide: 5
   _tailleNormale: 1
-  "_tailleR\xE9tr\xE9cie": 0.5
+  "_tailleR\xE9tr\xE9cie": 0.2
   _groundCheck: {fileID: 280404926}
   _presenceSol:
     serializedVersion: 2
@@ -928,7 +928,6 @@ MonoBehaviour:
     m_Bits: 128
   _solPrincipale: 0
   _MurGrimper: 0
-  _canjump: 1
   _puissanceChampignon: 15
   _champignonCheck:
     serializedVersion: 2
