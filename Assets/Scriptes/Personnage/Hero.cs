@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Hero : MonoBehaviour
 {
-    private string _rfidId;
 
     [SerializeField] private float _vitesseMarche = 5f;
     [SerializeField] private float _vitesseCourse = 5f;
@@ -13,28 +12,38 @@ public class Hero : MonoBehaviour
     [SerializeField] private float _tailleNormale = 1f;
     [SerializeField] private float _tailleRétrécie = 0.2f;
 
+    public float jumpDistance = 1f;
+
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private LayerMask _presenceSol;
 
     [SerializeField] private Transform _wallCheck;
     [SerializeField] private LayerMask _presenceMur;
 
+    [SerializeField] private Transform _rebordCheck;
+    [SerializeField] private LayerMask _presenceRebord;
+
+
     private Rigidbody2D _body;
     private Animator _animator;
+    private Collider2D _contact;
 
     private float _hDirection = 0;
     private float _vDirection = 0;
 
     private bool _courir = false;
     private bool _grimper = false;
-    [SerializeField] private bool _solPrincipale = false;
-    [SerializeField] private bool _MurGrimper = false;
+    private bool _solPrincipale = false;
+    private bool _rebord = false;
+    private bool _MurGrimper = false;
     private bool _doubleSaut = false;
     private bool _doubleSautRFID = false;
     private bool _canjump = true;
     private bool _glisser = false;
     private bool _retréci = false;
     private bool _miniMoiRFID = false;
+
+    [SerializeField] private GameObject _toucheR;
 
     [Header("Champignon")]
     [SerializeField] private float _puissanceChampignon = 15f;
@@ -51,6 +60,7 @@ public class Hero : MonoBehaviour
     {
         _body = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
+        _contact = GetComponent<Collider2D>();
     }
 
 
@@ -104,6 +114,9 @@ public class Hero : MonoBehaviour
 
         _MurGrimper = colliderGrimper != null;
 
+        Collider2D colliderMonter = Physics2D.OverlapCircle(_rebordCheck.position, 0.25f, _presenceSol);
+
+        _rebord = colliderMonter != null;
 
         Collider2D colliderChampignon = Physics2D.OverlapCircle(_groundCheck.position, 0.25f, _champignonCheck);
 
@@ -191,6 +204,22 @@ public class Hero : MonoBehaviour
 
         }
 
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            _toucheR.SetActive(true);
+        }
+        else if (Input.GetKeyDown(KeyCode.Y))
+        {
+            _toucheR.SetActive(false);
+        }
+
+        //Monter automatiquement les trottoirs
+
+        if (_solPrincipale && _rebord && !_MurGrimper)
+        {
+            transform.position = new Vector2(transform.position.x, transform.position.y + (jumpDistance * transform.localScale.y));
+        }
+
 
 
         //Animation
@@ -200,6 +229,8 @@ public class Hero : MonoBehaviour
 
         _animator.SetFloat("VelocityY", _body.velocity.y);
         _animator.SetBool("Sol", _solPrincipale);
+
+
     }
 
 
