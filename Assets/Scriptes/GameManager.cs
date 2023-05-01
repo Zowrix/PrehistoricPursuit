@@ -15,10 +15,21 @@ public class GameManager : BaseSingleton<GameManager>
 
     [Header("UI")]
     [SerializeField] private GameObject _pauseMenuUI;
+
+    [Header("Personnage")]
+    public Transform player;
     // Start is called before the first frame update
     void Start()
     {
-
+#if UNITY_EDITOR
+        Debug.Log("Seulement dans l'editeur !");
+        return;
+#else
+        float playerX = PlayerPrefs.GetFloat("PlayerX");
+        float playerY = PlayerPrefs.GetFloat("PlayerY");
+        float playerZ = PlayerPrefs.GetFloat("PlayerZ");
+        player.position = new Vector3(playerX, playerY, playerZ);
+#endif
     }
 
     // Update is called once per frame

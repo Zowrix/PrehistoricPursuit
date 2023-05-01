@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class Heroloury : MonoBehaviour
 {
-
+    private string _rfidId;
     [SerializeField] private float _vitesseMarche = 5f;
     [SerializeField] private float _vitesseCourse = 5f;
     [SerializeField] private float _puissanceSaut = 7f;
     [SerializeField] private float _vitesseSlide = 5f;
-
-
+    [SerializeField] private float _tailleNormale = 1f;
+    [SerializeField] private float _tailleRétrécie = 0.5f;
+    private Animator _animator;
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private LayerMask _presenceSol;
 
@@ -18,7 +19,7 @@ public class Heroloury : MonoBehaviour
     [SerializeField] private LayerMask _presenceMur;
 
     private Rigidbody2D _body;
-
+    private bool _doubleSautRFID = false;
     private float _hDirection = 0;
     private float _vDirection = 0;
 
@@ -26,9 +27,10 @@ public class Heroloury : MonoBehaviour
     private bool _grimper = false;
     [SerializeField] private bool _solPrincipale = false;
     [SerializeField] private bool _MurGrimper = false;
-    [SerializeField] private bool _doubleSaut = false;
+    private bool _doubleSaut = false;
     [SerializeField] private bool _canjump = true;
-    [SerializeField] private bool _glisser = false;
+    private bool _glisser = false;
+    private bool _retréci = false;
 
     [Header("Champignon")]
     [SerializeField] private float _puissanceChampignon = 15f;
@@ -47,9 +49,31 @@ public class Heroloury : MonoBehaviour
     void Start()
     {
         _body = GetComponent<Rigidbody2D>();
-
+        _animator = GetComponent<Animator>();
     }
 
+
+
+    public void LancementenFonctionDuId(string id)
+    {
+        if (id == " 69 231 137 172")
+        {
+            if (_doubleSautRFID == false)
+            {
+                _doubleSautRFID = true;
+                Debug.Log(_doubleSautRFID);
+            }
+            else
+            {
+                _doubleSautRFID = false;
+                Debug.Log(_doubleSautRFID);
+            }
+        }
+        else
+        {
+            Debug.Log(id);
+        }
+    }
     // Update is called once per frame
     void Update()
     {
@@ -93,25 +117,41 @@ public class Heroloury : MonoBehaviour
 
         if (Input.GetButtonDown("Sauter"))
         {
-            if (_canjump)
+            if (_canjump && !_doubleSautRFID && (_solPrincipale || _joueurSurPlateforme))
             {
                 _canjump = false;
-                _doubleSaut = true;
+                _solPrincipale = false;
                 _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
+                Debug.Log(_canjump);
             }
 
-            if (_doubleSaut)
+            if (_doubleSautRFID)
             {
-                _doubleSaut = false;
-                _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
+                Debug.Log("Double");
 
+                if (_canjump)
+                {
+                    _canjump = false;
+                    _doubleSaut = true;
+                    _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
+                    Debug.Log("Je suis la");
+                }
+
+                if (_doubleSaut)
+                {
+                    _doubleSaut = false;
+                    _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
+                    Debug.Log("Je suis la 2");
+                }
             }
         }
 
         if (_champignon)
         {
             _canjump = false;
-            _doubleSaut = true;
+            if (_doubleSautRFID)
+            { _doubleSaut = true; }
+
             _body.velocity = new Vector2(_body.velocity.x, _puissanceChampignon);
             onPlayerTouchingMushroom?.Invoke();
         }
@@ -134,7 +174,29 @@ public class Heroloury : MonoBehaviour
             _body.velocity = new Vector2(0, _vitesseSlide * _vDirection);
         }
 
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            _retréci = !_retréci;
+            AppliquerRetrecissement();
+        }
+        //Animation
+        _animator.SetBool("Marcher", _hDirection != 0 && !_courir);
+        _animator.SetBool("Courir", _hDirection != 0 && _courir);
 
+    }
+
+    void AppliquerRetrecissement()
+    {
+        if (_retréci)
+        {
+            transform.localScale = new Vector3(_tailleRétrécie, _tailleRétrécie, 1f);
+            _body.gravityScale = _tailleRétrécie;
+        }
+        else
+        {
+            transform.localScale = new Vector3(_tailleNormale, _tailleNormale, 1f);
+            _body.gravityScale = _tailleNormale;
+        }
     }
 
     private void FixedUpdate()
