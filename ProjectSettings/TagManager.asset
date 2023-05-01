@@ -9,6 +9,7 @@ TagManager:
   - Platform
   - breakable
   - Sol
+  - Obstacle
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - Mur_Grimper
   - Champignon
   - plateforme_mouvante
-  - 
+  - Marche
   - 
   - 
   - 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ad4934b7b1c1fbe49bf5135750bedf11
+guid: fd7b75daf587dc64e9cf6766210b1cee
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -33,7 +33,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 25
+  spritePixelsToUnits: 200
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -117,13 +117,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: FOX_Iddle_0
+      name: Scientist_course_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 100
-        height: 100
+        width: 546.1667
+        height: 633
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -131,20 +131,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d08323edaedf9a140a860b9e027b9f0b
-      internalID: 372804795
+      spriteID: 678fd80142b00aa44b1667c5b1a1c04f
+      internalID: -376794763
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FOX_Iddle_1
+      name: Scientist_course_1
       rect:
         serializedVersion: 2
-        x: 100
+        x: 546
         y: 0
-        width: 100
-        height: 100
+        width: 546.1667
+        height: 633
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -152,20 +152,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2152d81718ddee8448e467aec62d1fd3
-      internalID: 1249756035
+      spriteID: c3752d28ea276c54ab77ee54a861bf2c
+      internalID: -75133430
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FOX_Iddle_2
+      name: Scientist_course_2
       rect:
         serializedVersion: 2
-        x: 200
+        x: 1092
         y: 0
-        width: 100
-        height: 100
+        width: 546.1667
+        height: 633
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -173,20 +173,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 08cf14a03bc0c024898b330495ad939c
-      internalID: 1259322522
+      spriteID: dd4f31ad7575fa5449e84a6b300c53e9
+      internalID: -1494717031
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FOX_Iddle_3
+      name: Scientist_course_3
       rect:
         serializedVersion: 2
-        x: 300
+        x: 1638
         y: 0
-        width: 100
-        height: 100
+        width: 546.1667
+        height: 633
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -194,20 +194,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fb1c2f3582ba0ef47b90e33b47b00e9b
-      internalID: -785988548
+      spriteID: 2a713f56499d69c439972530a970a8b4
+      internalID: -759228517
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FOX_Iddle_4
+      name: Scientist_course_4
       rect:
         serializedVersion: 2
-        x: 400
+        x: 2184
         y: 0
-        width: 100
-        height: 100
+        width: 546.1667
+        height: 633
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -215,20 +215,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1170f5e56bf981f44ac0e164a8bc8575
-      internalID: 1994317637
+      spriteID: 6e0cdd10258af67449e408777e7a987d
+      internalID: -448126049
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FOX_Iddle_5
+      name: Scientist_course_5
       rect:
         serializedVersion: 2
-        x: 500
+        x: 2730
         y: 0
-        width: 100
-        height: 100
+        width: 546.1667
+        height: 633
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -236,50 +236,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d46c32da87318484ab73d0a12c1f580d
-      internalID: -1856513799
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FOX_Iddle_6
-      rect:
-        serializedVersion: 2
-        x: 600
-        y: 0
-        width: 100
-        height: 100
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: dc7c61846fc35a942b68a8e5f8fe069e
-      internalID: -78070750
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FOX_Iddle_7
-      rect:
-        serializedVersion: 2
-        x: 700
-        y: 0
-        width: 100
-        height: 100
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 19a3fc92a6ae1bb46b38fc5a86b72a38
-      internalID: -818410831
+      spriteID: ce461438affbb854b8a5368eb44f67e1
+      internalID: 1089296074
       vertices: []
       indices: 
       edges: []
@@ -295,14 +253,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      FOX_Iddle_2: 1259322522
-      FOX_Iddle_4: 1994317637
-      FOX_Iddle_7: -818410831
-      FOX_Iddle_1: 1249756035
-      FOX_Iddle_6: -78070750
-      FOX_Iddle_3: -785988548
-      FOX_Iddle_5: -1856513799
-      FOX_Iddle_0: 372804795
+      Scientist_course_1: -75133430
+      Scientist_course_5: 1089296074
+      Scientist_course_4: -448126049
+      Scientist_course_2: -1494717031
+      Scientist_course_3: -759228517
+      Scientist_course_0: -376794763
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
