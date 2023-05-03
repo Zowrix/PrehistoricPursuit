@@ -4,52 +4,71 @@ using UnityEngine;
 
 public class Heroloury : MonoBehaviour
 {
-    private string _rfidId;
+    [Header("Marche/course")]
     [SerializeField] private float _vitesseMarche = 5f;
     [SerializeField] private float _vitesseCourse = 5f;
-    [SerializeField] private float _puissanceSaut = 7f;
-    [SerializeField] private float _vitesseSlide = 5f;
-    [SerializeField] private float _tailleNormale = 1f;
-    [SerializeField] private float _tailleRétrécie = 0.5f;
-    private Animator _animator;
-    [SerializeField] private Transform _groundCheck;
-    [SerializeField] private LayerMask _presenceSol;
-
-    [SerializeField] private Transform _wallCheck;
-    [SerializeField] private LayerMask _presenceMur;
-
-    private Rigidbody2D _body;
-    private bool _doubleSautRFID = false;
     private float _hDirection = 0;
     private float _vDirection = 0;
 
-    private bool _courir = false;
-    private bool _grimper = false;
-    [SerializeField] private bool _solPrincipale = false;
-    [SerializeField] private bool _MurGrimper = false;
-    private bool _doubleSaut = false;
-    [SerializeField] private bool _canjump = true;
-    private bool _glisser = false;
-    private bool _retréci = false;
+    [SerializeField] private float _puissanceSaut = 7f;
+
+    [Header("Pouvoir")]
+    [SerializeField] private float _tailleNormale = 1f;
+    [SerializeField] private float _tailleRétrécie = 0.5f;
+    [SerializeField] private GameObject _toucheR;
+    [Header("Check")]
+    [SerializeField] private Transform _groundCheck;
+    [SerializeField] private LayerMask _presenceSol;
+    [SerializeField] private Transform _wallCheck;
+    [SerializeField] private LayerMask _presenceMur;
+    [SerializeField] private Transform _rebordCheck;
+    [SerializeField] private LayerMask _presenceRebord;
+    [SerializeField] private LayerMask _plateformeMouvante;
+
+
+    [Header("rebord")]
+    public float jumpDistance = 1f;
+    private Rigidbody2D _body;
+    private Collider2D _contact;
+
+    [Header("S'accrocher au mur")]
+    [SerializeField] private float _vitesseSlide = 5f;
 
     [Header("Champignon")]
     [SerializeField] private float _puissanceChampignon = 15f;
     [SerializeField] private LayerMask _champignonCheck;
     [SerializeField] private bool _champignon = false;
-
     public delegate void OnPlayerTouchingMushroom();
     public static event OnPlayerTouchingMushroom onPlayerTouchingMushroom;
     public delegate void OnPlayerExitMushroom();
     public static event OnPlayerExitMushroom onPlayerExitMushroom;
 
-    [SerializeField] private LayerMask _plateformeMouvante;
+
+
+
+
     [SerializeField] private bool _joueurSurPlateforme = false;
+    private bool _courir = false;
+    private bool _grimper = false;
+    private bool _rebord = false;
+    private bool _doubleSautRFID = false;
+    private bool _miniMoiRFID = false;
+    private bool _solPrincipale = false;
+    private bool _MurGrimper = false;
+    private bool _doubleSaut = false;
+    private bool _canjump = true;
+    private bool _glisser = false;
+    private bool _retréci = false;
+
+    private Animator _animator;
+
 
     // Start is called before the first frame update
     void Start()
     {
         _body = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
+        _contact = GetComponent<Collider2D>();
     }
 
 
@@ -62,6 +81,22 @@ public class Heroloury : MonoBehaviour
             {
                 _doubleSautRFID = true;
                 Debug.Log(_doubleSautRFID);
+            }
+            else if (id == " 162 82 121 26")
+            {
+                if (!_miniMoiRFID)
+                {
+                    _miniMoiRFID = true;
+                }
+                else if (_miniMoiRFID && _retréci)
+                {
+                    _miniMoiRFID = false;
+                    _retréci = false;
+                }
+                else
+                {
+                    _miniMoiRFID = false;
+                }
             }
             else
             {
@@ -90,6 +125,10 @@ public class Heroloury : MonoBehaviour
 
         _champignon = colliderChampignon != null;
 
+        Collider2D colliderMonter = Physics2D.OverlapCircle(_rebordCheck.position, 0.25f, _presenceSol);
+
+        _rebord = colliderMonter != null;
+
         Collider2D colliderPlatform = Physics2D.OverlapCircle(_groundCheck.position, 0.25f, _plateformeMouvante);
 
         if (colliderPlatform != null)
@@ -110,9 +149,13 @@ public class Heroloury : MonoBehaviour
         _courir = Input.GetAxisRaw("Courir") != 0;
         _grimper = Input.GetAxisRaw("Grimper") != 0;
 
-        if (_hDirection != 0)
+        if (_hDirection != 0 && !_retréci)
         {
-            transform.localScale = new Vector3(_hDirection, 1, 1);
+            transform.localScale = new Vector3(_hDirection, _tailleNormale, 1);
+        }
+        else if (_hDirection != 0 && _retréci)
+        {
+            transform.localScale = new Vector3(_hDirection * _tailleRétrécie, _tailleRétrécie, 1f);
         }
 
         if (Input.GetButtonDown("Sauter"))
@@ -174,10 +217,30 @@ public class Heroloury : MonoBehaviour
             _body.velocity = new Vector2(0, _vitesseSlide * _vDirection);
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (_miniMoiRFID)
         {
-            _retréci = !_retréci;
-            AppliquerRetrecissement();
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                _retréci = !_retréci;
+            }
+
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            _toucheR.SetActive(true);
+        }
+        else if (Input.GetKeyDown(KeyCode.Y))
+        {
+            _toucheR.SetActive(false);
+        }
+
+        //Monter automatiquement les trottoirs
+
+        if (_solPrincipale && _rebord && !_MurGrimper)
+        {
+            transform.position = new Vector2(transform.position.x, transform.position.y + (jumpDistance * transform.localScale.y));
         }
         //Animation
         _animator.SetBool("Marcher", _hDirection != 0 && !_courir);
@@ -211,16 +274,25 @@ public class Heroloury : MonoBehaviour
 
         }
 
+        if (_retréci)
+        {
+            transform.localScale = new Vector3(_tailleRétrécie, _tailleRétrécie, 1f);
+        }
+        else
+        {
+            transform.localScale = new Vector3(_tailleNormale, _tailleNormale, 1f);
 
+        }
 
         if (_solPrincipale || _joueurSurPlateforme)
         {
             _canjump = true;
-
+            Debug.Log(_solPrincipale);
         }
 
 
 
-    }
 
+
+    }
 }
