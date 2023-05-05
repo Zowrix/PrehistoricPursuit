@@ -164,10 +164,9 @@ MonoBehaviour:
   _vitesseMarche: 5
   _vitesseCourse: 10
   _puissanceSaut: 10
-  _vitesseSlide: 5
   _tailleNormale: 1
   "_tailleR\xE9tr\xE9cie": 0.2
-  jumpDistance: 0.5
+  _toucheR: {fileID: 7647632823804091424}
   _groundCheck: {fileID: 8396246777992784268}
   _presenceSol:
     serializedVersion: 2
@@ -175,17 +174,22 @@ MonoBehaviour:
   _wallCheck: {fileID: 7413433144764465203}
   _presenceMur:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 192
   _rebordCheck: {fileID: 2496527938161222673}
   _presenceRebord:
     serializedVersion: 2
     m_Bits: 64
-  _toucheR: {fileID: 7647632823804091424}
+  _plateformeMouvante:
+    serializedVersion: 2
+    m_Bits: 0
+  jumpDistance: 1.1
+  _vitesseSlide: 5
   _puissanceChampignon: 15
   _champignonCheck:
     serializedVersion: 2
     m_Bits: 0
   _champignon: 0
+  _joueurSurPlateforme: 0
 --- !u!1 &5215423557487033514
 GameObject:
   m_ObjectHideFlags: 0
