@@ -25,6 +25,13 @@ public class Hero : MonoBehaviour
     [SerializeField] private LayerMask _presenceRebord;
     [SerializeField] private LayerMask _plateformeMouvante;
 
+    [Header("Vie")]
+    [SerializeField] private GameObject _Coeur1;
+    [SerializeField] private GameObject _Coeur2;
+    [SerializeField] private GameObject _Coeur3;
+    [SerializeField] private GameObject _objectCheckGround;
+    [SerializeField] private GameObject _objectCheckWall;
+    [SerializeField] private GameObject _objectCheckRebord;
 
 
     [Header("rebord")]
@@ -247,8 +254,21 @@ public class Hero : MonoBehaviour
             transform.position = new Vector2(transform.position.x, transform.position.y + (jumpDistance * transform.localScale.y));
         }
         //Animation
+
+
+        if (!_Coeur1.activeSelf && !_Coeur2.activeSelf && !_Coeur3.activeSelf && _contact.enabled == true)
+        {
+            _body.velocity = new Vector2(_body.velocity.x, _puissanceChampignon);
+            _contact.enabled = false;
+            _objectCheckGround.SetActive(false);
+            _objectCheckWall.SetActive(false);
+            _objectCheckRebord.SetActive(false);
+        }
         _animator.SetBool("Marcher", _hDirection != 0 && !_courir);
         _animator.SetBool("Courir", _hDirection != 0 && _courir);
+        _animator.SetFloat("VelocityY", _body.velocity.y);
+        _animator.SetBool("Sol", _solPrincipale);
+
 
     }
 

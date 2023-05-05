@@ -25,10 +25,17 @@ public class Heroloury : MonoBehaviour
     [SerializeField] private LayerMask _presenceRebord;
     [SerializeField] private LayerMask _plateformeMouvante;
 
+    [Header("Vie")]
+    [SerializeField] private GameObject _Coeur1;
+    [SerializeField] private GameObject _Coeur2;
+    [SerializeField] private GameObject _Coeur3;
+    [SerializeField] private GameObject _objectCheckGround;
+    [SerializeField] private GameObject _objectCheckWall;
+    [SerializeField] private GameObject _objectCheckRebord;
 
 
     [Header("rebord")]
-    public float jumpDistance = 1f;
+    public float jumpDistance = 1.1f;
     private Rigidbody2D _body;
     private Collider2D _contact;
 
@@ -43,15 +50,6 @@ public class Heroloury : MonoBehaviour
     public static event OnPlayerTouchingMushroom onPlayerTouchingMushroom;
     public delegate void OnPlayerExitMushroom();
     public static event OnPlayerExitMushroom onPlayerExitMushroom;
-
-    [Header("Vie")]
-    [SerializeField] private GameObject _Coeur1;
-    [SerializeField] private GameObject _Coeur2;
-    [SerializeField] private GameObject _Coeur3;
-    [SerializeField] private GameObject _objectCheckGround;
-    [SerializeField] private GameObject _objectCheckWall;
-    [SerializeField] private GameObject _objectCheckRebord;
-
 
 
     [SerializeField] private bool _joueurSurPlateforme = false;
@@ -88,28 +86,21 @@ public class Heroloury : MonoBehaviour
             {
                 _doubleSautRFID = true;
                 Debug.Log(_doubleSautRFID);
+                _miniMoiRFID = false;
+                _retréci = false;
+                _toucheR.SetActive(false);
             }
-            else if (id == " 162 82 121 26")
+        }
+        else if (id == " 162 82 121 26")
+        {
+            if (!_miniMoiRFID)
             {
-                if (!_miniMoiRFID)
-                {
-                    _miniMoiRFID = true;
-                }
-                else if (_miniMoiRFID && _retréci)
-                {
-                    _miniMoiRFID = false;
-                    _retréci = false;
-                }
-                else
-                {
-                    _miniMoiRFID = false;
-                }
-            }
-            else
-            {
+                _miniMoiRFID = true;
+                Debug.Log(_miniMoiRFID);
                 _doubleSautRFID = false;
-                Debug.Log(_doubleSautRFID);
+                _toucheR.SetActive(true);
             }
+
         }
         else
         {
@@ -123,18 +114,40 @@ public class Heroloury : MonoBehaviour
 
         _solPrincipale = collider != null;
 
-        Collider2D colliderGrimper = Physics2D.OverlapCircle(_wallCheck.position, 0.25f, _presenceMur);
+        if (!_retréci)
+        {
+            Collider2D colliderGrimper = Physics2D.OverlapCircle(_wallCheck.position, 0.25f, _presenceMur);
 
-        _MurGrimper = colliderGrimper != null;
+            _MurGrimper = colliderGrimper != null;
+        }
+        else
+        {
+            Collider2D colliderGrimper = Physics2D.OverlapCircle(_wallCheck.position, 0.05f, _presenceMur);
+
+            _MurGrimper = colliderGrimper != null;
+        }
+
+
 
 
         Collider2D colliderChampignon = Physics2D.OverlapCircle(_groundCheck.position, 0.25f, _champignonCheck);
 
         _champignon = colliderChampignon != null;
 
-        Collider2D colliderMonter = Physics2D.OverlapCircle(_rebordCheck.position, 0.25f, _presenceSol);
+        if (!_retréci)
+        {
+            Collider2D colliderMonter = Physics2D.OverlapCircle(_rebordCheck.position, 0.25f, _presenceSol);
+            _rebord = colliderMonter != null;
+        }
+        else
+        {
+            Collider2D colliderMonter = Physics2D.OverlapCircle(_rebordCheck.position, 0.05f, _presenceSol);
+            _rebord = colliderMonter != null;
+        }
 
-        _rebord = colliderMonter != null;
+
+
+
 
         Collider2D colliderPlatform = Physics2D.OverlapCircle(_groundCheck.position, 0.25f, _plateformeMouvante);
 
@@ -165,14 +178,18 @@ public class Heroloury : MonoBehaviour
             transform.localScale = new Vector3(_hDirection * _tailleRétrécie, _tailleRétrécie, 1f);
         }
 
+        Debug.Log("Mur :" + _MurGrimper);
+        Debug.Log("Rebord :" + _rebord);
+
         if (Input.GetButtonDown("Sauter"))
         {
+
             if (_canjump && !_doubleSautRFID && (_solPrincipale || _joueurSurPlateforme))
             {
+                Debug.Log("Wesh");
                 _canjump = false;
                 _solPrincipale = false;
                 _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
-                Debug.Log(_canjump);
             }
 
             if (_doubleSautRFID)
@@ -184,14 +201,12 @@ public class Heroloury : MonoBehaviour
                     _canjump = false;
                     _doubleSaut = true;
                     _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
-                    Debug.Log("Je suis la");
                 }
 
                 if (_doubleSaut)
                 {
                     _doubleSaut = false;
                     _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
-                    Debug.Log("Je suis la 2");
                 }
             }
         }
@@ -230,17 +245,6 @@ public class Heroloury : MonoBehaviour
             {
                 _retréci = !_retréci;
             }
-
-
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            _toucheR.SetActive(true);
-        }
-        else if (Input.GetKeyDown(KeyCode.Y))
-        {
-            _toucheR.SetActive(false);
         }
 
         //Monter automatiquement les trottoirs
@@ -250,8 +254,6 @@ public class Heroloury : MonoBehaviour
             transform.position = new Vector2(transform.position.x, transform.position.y + (jumpDistance * transform.localScale.y));
         }
         //Animation
-        _animator.SetBool("Marcher", _hDirection != 0 && !_courir);
-        _animator.SetBool("Courir", _hDirection != 0 && _courir);
 
 
         if (!_Coeur1.activeSelf && !_Coeur2.activeSelf && !_Coeur3.activeSelf && _contact.enabled == true)
@@ -261,8 +263,13 @@ public class Heroloury : MonoBehaviour
             _objectCheckGround.SetActive(false);
             _objectCheckWall.SetActive(false);
             _objectCheckRebord.SetActive(false);
-
         }
+        _animator.SetBool("Marcher", _hDirection != 0 && !_courir);
+        _animator.SetBool("Courir", _hDirection != 0 && _courir);
+        _animator.SetFloat("VelocityY", _body.velocity.y);
+        _animator.SetBool("Sol", _solPrincipale);
+
+
     }
 
     private void FixedUpdate()
@@ -280,11 +287,11 @@ public class Heroloury : MonoBehaviour
         if (_retréci)
         {
             transform.localScale = new Vector3(_tailleRétrécie, _tailleRétrécie, 1f);
+
         }
         else
         {
             transform.localScale = new Vector3(_tailleNormale, _tailleNormale, 1f);
-
         }
 
         if (_solPrincipale || _joueurSurPlateforme)
