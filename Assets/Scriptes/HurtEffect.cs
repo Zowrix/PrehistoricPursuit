@@ -50,4 +50,14 @@ public class HurtEffect : MonoBehaviour
             _Coeur3.SetActive(false);
         }
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player") && _oneShot)
+        {
+            _Coeur1.SetActive(false);
+            _Coeur2.SetActive(false);
+            _Coeur3.SetActive(false);
+        }
+    }
 }

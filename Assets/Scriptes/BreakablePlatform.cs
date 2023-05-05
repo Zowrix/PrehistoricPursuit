@@ -8,16 +8,18 @@ public class BreakablePlatform : MonoBehaviour
     [SerializeField] private Sprite brokenSprite;
     [SerializeField] private ParticleSystem particle;
 
-    //[SerializeField] private AudioClip breakSound;
-
     private Rigidbody2D rb2d;
     private bool isBroken = false;
     private float timeSinceTouched = 0f;
+    private Vector3 initialPosition;
+    private Sprite initialSprite;
 
 
     private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
+        initialPosition = transform.position;
+        initialSprite = spriteRenderer.sprite;
     }
 
     private void Update()
@@ -35,8 +37,6 @@ public class BreakablePlatform : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-
-
         if (collision.collider.CompareTag("Player") && rb2d.velocity.y <= 0f && timeSinceTouched <= 0f)
         {
             // Le joueur marche sur la plateforme et elle tombe
@@ -48,10 +48,9 @@ public class BreakablePlatform : MonoBehaviour
 
         if (collision.collider.CompareTag("Sol"))
         {
-            Debug.Log("touche le sol");
             particle.transform.position = transform.position;
             particle.Play();
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 
@@ -63,9 +62,27 @@ public class BreakablePlatform : MonoBehaviour
         // Applique une force pour que la plateforme tombe plus vite
         rb2d.AddForce(Vector2.down * breakForce, ForceMode2D.Impulse);
 
+        // Appelle la méthode "Respawn" après 5 secondes
+        Invoke("Respawn", 5f);
+    }
 
-        //AudioSource.PlayClipAtPoint(breakSound, transform.position);
+    private void Respawn()
+    {
+        // Réactive le Rigidbody2D pour faire revenir la plateforme
+        transform.position = initialPosition;
+        rb2d.bodyType = RigidbodyType2D.Kinematic;
+        gameObject.SetActive(true);
 
+        // Réinitialise le sprite de la plateforme
+        spriteRenderer.sprite = initialSprite;
 
+        // Attend une seconde pour que la plateforme ait fini de revenir avant de pouvoir la toucher à nouveau
+        Invoke("ResetTimeSinceTouched", 1f);
+    }
+
+    private void ResetTimeSinceTouched()
+    {
+        timeSinceTouched = 0f;
+        isBroken = false;
     }
 }

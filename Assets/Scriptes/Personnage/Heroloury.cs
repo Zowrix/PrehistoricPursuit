@@ -26,6 +26,7 @@ public class Heroloury : MonoBehaviour
     [SerializeField] private LayerMask _plateformeMouvante;
 
 
+
     [Header("rebord")]
     public float jumpDistance = 1f;
     private Rigidbody2D _body;
@@ -43,7 +44,13 @@ public class Heroloury : MonoBehaviour
     public delegate void OnPlayerExitMushroom();
     public static event OnPlayerExitMushroom onPlayerExitMushroom;
 
-
+    [Header("Vie")]
+    [SerializeField] private GameObject _Coeur1;
+    [SerializeField] private GameObject _Coeur2;
+    [SerializeField] private GameObject _Coeur3;
+    [SerializeField] private GameObject _objectCheckGround;
+    [SerializeField] private GameObject _objectCheckWall;
+    [SerializeField] private GameObject _objectCheckRebord;
 
 
 
@@ -246,19 +253,15 @@ public class Heroloury : MonoBehaviour
         _animator.SetBool("Marcher", _hDirection != 0 && !_courir);
         _animator.SetBool("Courir", _hDirection != 0 && _courir);
 
-    }
 
-    void AppliquerRetrecissement()
-    {
-        if (_retréci)
+        if (!_Coeur1.activeSelf && !_Coeur2.activeSelf && !_Coeur3.activeSelf && _contact.enabled == true)
         {
-            transform.localScale = new Vector3(_tailleRétrécie, _tailleRétrécie, 1f);
-            _body.gravityScale = _tailleRétrécie;
-        }
-        else
-        {
-            transform.localScale = new Vector3(_tailleNormale, _tailleNormale, 1f);
-            _body.gravityScale = _tailleNormale;
+            _body.velocity = new Vector2(_body.velocity.x, _puissanceChampignon);
+            _contact.enabled = false;
+            _objectCheckGround.SetActive(false);
+            _objectCheckWall.SetActive(false);
+            _objectCheckRebord.SetActive(false);
+
         }
     }
 
