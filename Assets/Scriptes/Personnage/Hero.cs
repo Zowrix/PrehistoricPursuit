@@ -15,7 +15,7 @@ public class Hero : MonoBehaviour
 
     [Header("Pouvoir")]
     [SerializeField] private float _tailleNormale = 1f;
-    [SerializeField] private float _tailleRétrécie = 0.5f;
+    [SerializeField] private float _tailleRï¿½trï¿½cie = 0.5f;
     [SerializeField] private GameObject _toucheR;
     [Header("Check")]
     [SerializeField] private Transform _groundCheck;
@@ -52,7 +52,7 @@ public class Hero : MonoBehaviour
     public delegate void OnPlayerExitMushroom();
     public static event OnPlayerExitMushroom onPlayerExitMushroom;
 
-    [Header("Caméra")]
+    [Header("Camï¿½ra")]
     [SerializeField] private GameObject _camera;
 
     [SerializeField] private bool _joueurSurPlateforme = false;
@@ -66,7 +66,7 @@ public class Hero : MonoBehaviour
     private bool _doubleSaut = false;
     private bool _canjump = true;
     private bool _glisser = false;
-    private bool _retréci = false;
+    private bool _retrï¿½ci = false;
 
     private Animator _animator;
 
@@ -91,7 +91,7 @@ public class Hero : MonoBehaviour
                 _doubleSautRFID = true;
 
                 _miniMoiRFID = false;
-                _retréci = false;
+                _retrï¿½ci = false;
                 _toucheR.SetActive(false);
             }
         }
@@ -118,7 +118,7 @@ public class Hero : MonoBehaviour
 
         _solPrincipale = collider != null;
 
-        if (!_retréci && _objectCheckWall != null)
+        if (!_retrï¿½ci && _objectCheckWall != null)
         {
             Collider2D colliderGrimper = Physics2D.OverlapCircle(_wallCheck.position, 0.25f, _presenceMur);
 
@@ -138,7 +138,7 @@ public class Hero : MonoBehaviour
 
         _champignon = colliderChampignon != null;
 
-        if (!_retréci && _objectCheckRebord != null)
+        if (!_retrï¿½ci && _objectCheckRebord != null)
         {
             Collider2D colliderMonter = Physics2D.OverlapCircle(_rebordCheck.position, 0.25f, _presenceSol);
             _rebord = colliderMonter != null;
@@ -171,13 +171,13 @@ public class Hero : MonoBehaviour
         _courir = Input.GetAxisRaw("Courir") != 0;
         _grimper = Input.GetAxisRaw("Grimper") != 0;
 
-        if (_hDirection != 0 && !_retréci)
+        if (_hDirection != 0 && !_retrï¿½ci)
         {
             transform.localScale = new Vector3(_hDirection, _tailleNormale, 1);
         }
-        else if (_hDirection != 0 && _retréci)
+        else if (_hDirection != 0 && _retrï¿½ci)
         {
-            transform.localScale = new Vector3(_hDirection * _tailleRétrécie, _tailleRétrécie, 1f);
+            transform.localScale = new Vector3(_hDirection * _tailleRï¿½trï¿½cie, _tailleRï¿½trï¿½cie, 1f);
         }
 
 
@@ -244,7 +244,7 @@ public class Hero : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.R))
             {
-                _retréci = !_retréci;
+                _retrï¿½ci = !_retrï¿½ci;
             }
         }
 
@@ -254,7 +254,7 @@ public class Hero : MonoBehaviour
         {
             transform.position = new Vector2(transform.position.x, transform.position.y + (jumpDistance * transform.localScale.y));
         }
-        //Animation
+
 
 
         if (!_Coeur1.activeSelf && !_Coeur2.activeSelf && !_Coeur3.activeSelf && _contact.enabled == true)
@@ -265,8 +265,13 @@ public class Hero : MonoBehaviour
             // Destroy(_objectCheckGround);
             Destroy(_objectCheckWall);
             Destroy(_objectCheckRebord);
+        }
 
         }
+
+
+        //Animation
+
         _animator.SetBool("Marcher", _hDirection != 0 && !_courir);
         _animator.SetBool("Courir", _hDirection != 0 && _courir);
         _animator.SetFloat("VelocityY", _body.velocity.y);
@@ -287,9 +292,9 @@ public class Hero : MonoBehaviour
 
         }
 
-        if (_retréci)
+        if (_retrï¿½ci)
         {
-            transform.localScale = new Vector3(_tailleRétrécie, _tailleRétrécie, 1f);
+            transform.localScale = new Vector3(_tailleRï¿½trï¿½cie, _tailleRï¿½trï¿½cie, 1f);
 
         }
         else
