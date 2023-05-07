@@ -253,17 +253,21 @@ public class Hero : MonoBehaviour
         {
             transform.position = new Vector2(transform.position.x, transform.position.y + (jumpDistance * transform.localScale.y));
         }
-        //Animation
 
 
-        if (!_Coeur1.activeSelf && !_Coeur2.activeSelf && !_Coeur3.activeSelf && _contact.enabled == true)
+
+        /*if (!_Coeur1.activeSelf && !_Coeur2.activeSelf && !_Coeur3.activeSelf && _contact.enabled == true)
         {
             _body.velocity = new Vector2(_body.velocity.x, _puissanceChampignon);
             _contact.enabled = false;
             _objectCheckGround.SetActive(false);
             _objectCheckWall.SetActive(false);
             _objectCheckRebord.SetActive(false);
-        }
+        }*/
+
+
+        //Animation
+
         _animator.SetBool("Marcher", _hDirection != 0 && !_courir);
         _animator.SetBool("Courir", _hDirection != 0 && _courir);
         _animator.SetFloat("VelocityY", _body.velocity.y);
