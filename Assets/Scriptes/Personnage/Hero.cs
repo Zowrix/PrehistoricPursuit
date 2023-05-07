@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class Hero : MonoBehaviour
 {
@@ -51,6 +52,8 @@ public class Hero : MonoBehaviour
     public delegate void OnPlayerExitMushroom();
     public static event OnPlayerExitMushroom onPlayerExitMushroom;
 
+    [Header("Caméra")]
+    [SerializeField] private GameObject _camera;
 
     [SerializeField] private bool _joueurSurPlateforme = false;
     private bool _courir = false;
@@ -74,6 +77,7 @@ public class Hero : MonoBehaviour
         _body = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _contact = GetComponent<Collider2D>();
+
     }
 
 
@@ -85,7 +89,7 @@ public class Hero : MonoBehaviour
             if (_doubleSautRFID == false)
             {
                 _doubleSautRFID = true;
-                Debug.Log(_doubleSautRFID);
+
                 _miniMoiRFID = false;
                 _retréci = false;
                 _toucheR.SetActive(false);
@@ -96,7 +100,7 @@ public class Hero : MonoBehaviour
             if (!_miniMoiRFID)
             {
                 _miniMoiRFID = true;
-                Debug.Log(_miniMoiRFID);
+
                 _doubleSautRFID = false;
                 _toucheR.SetActive(true);
             }
@@ -114,13 +118,13 @@ public class Hero : MonoBehaviour
 
         _solPrincipale = collider != null;
 
-        if (!_retréci)
+        if (!_retréci && _objectCheckWall != null)
         {
             Collider2D colliderGrimper = Physics2D.OverlapCircle(_wallCheck.position, 0.25f, _presenceMur);
 
             _MurGrimper = colliderGrimper != null;
         }
-        else
+        else if (_objectCheckWall != null)
         {
             Collider2D colliderGrimper = Physics2D.OverlapCircle(_wallCheck.position, 0.05f, _presenceMur);
 
@@ -134,18 +138,16 @@ public class Hero : MonoBehaviour
 
         _champignon = colliderChampignon != null;
 
-        if (!_retréci)
+        if (!_retréci && _objectCheckRebord != null)
         {
             Collider2D colliderMonter = Physics2D.OverlapCircle(_rebordCheck.position, 0.25f, _presenceSol);
             _rebord = colliderMonter != null;
         }
-        else
+        else if (_objectCheckRebord != null)
         {
             Collider2D colliderMonter = Physics2D.OverlapCircle(_rebordCheck.position, 0.05f, _presenceSol);
             _rebord = colliderMonter != null;
         }
-
-
 
 
 
@@ -178,15 +180,14 @@ public class Hero : MonoBehaviour
             transform.localScale = new Vector3(_hDirection * _tailleRétrécie, _tailleRétrécie, 1f);
         }
 
-        Debug.Log("Mur :" + _MurGrimper);
-        Debug.Log("Rebord :" + _rebord);
+
 
         if (Input.GetButtonDown("Sauter"))
         {
 
             if (_canjump && !_doubleSautRFID && (_solPrincipale || _joueurSurPlateforme))
             {
-                Debug.Log("Wesh");
+
                 _canjump = false;
                 _solPrincipale = false;
                 _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
@@ -194,7 +195,7 @@ public class Hero : MonoBehaviour
 
             if (_doubleSautRFID)
             {
-                Debug.Log("Double");
+
 
                 if (_canjump)
                 {
@@ -260,9 +261,11 @@ public class Hero : MonoBehaviour
         {
             _body.velocity = new Vector2(_body.velocity.x, _puissanceChampignon);
             _contact.enabled = false;
-            _objectCheckGround.SetActive(false);
-            _objectCheckWall.SetActive(false);
-            _objectCheckRebord.SetActive(false);
+            _camera.GetComponent<CinemachineVirtualCamera>().Follow = null;
+            // Destroy(_objectCheckGround);
+            Destroy(_objectCheckWall);
+            Destroy(_objectCheckRebord);
+
         }
         _animator.SetBool("Marcher", _hDirection != 0 && !_courir);
         _animator.SetBool("Courir", _hDirection != 0 && _courir);
@@ -297,7 +300,7 @@ public class Hero : MonoBehaviour
         if (_solPrincipale || _joueurSurPlateforme)
         {
             _canjump = true;
-            Debug.Log(_solPrincipale);
+
         }
 
 

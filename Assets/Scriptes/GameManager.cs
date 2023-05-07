@@ -22,7 +22,7 @@ public class GameManager : BaseSingleton<GameManager>
     void Start()
     {
 #if UNITY_EDITOR
-        Debug.Log("Seulement dans l'editeur !");
+
         return;
 #else
         float playerX = PlayerPrefs.GetFloat("PlayerX");
