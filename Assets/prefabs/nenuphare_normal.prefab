@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5409734327949010393}
   - component: {fileID: 5409734327949010392}
   - component: {fileID: 5409734327949010395}
+  - component: {fileID: 654337019697198017}
   - component: {fileID: 5409734327949010394}
   m_Layer: 8
   m_Name: nenuphare_normal
@@ -123,6 +124,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea4979712aa88a644a7d6bb31ed73864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 5409734327949010394}
+--- !u!114 &654337019697198017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5409734327949010397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5e645afbf340474c83208c5126e35f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 5409734327949010394}

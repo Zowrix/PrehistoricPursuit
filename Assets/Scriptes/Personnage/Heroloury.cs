@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class Heroloury : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class Heroloury : MonoBehaviour
 
     [Header("Pouvoir")]
     [SerializeField] private float _tailleNormale = 1f;
-    [SerializeField] private float _tailleRétrécie = 0.5f;
+    [SerializeField] private float _tailleRetrecie = 0.5f;
     [SerializeField] private GameObject _toucheR;
     [Header("Check")]
     [SerializeField] private Transform _groundCheck;
@@ -51,6 +52,8 @@ public class Heroloury : MonoBehaviour
     public delegate void OnPlayerExitMushroom();
     public static event OnPlayerExitMushroom onPlayerExitMushroom;
 
+    [Header("Camera")]
+    [SerializeField] private GameObject _camera;
 
     [SerializeField] private bool _joueurSurPlateforme = false;
     private bool _courir = false;
@@ -60,10 +63,11 @@ public class Heroloury : MonoBehaviour
     private bool _miniMoiRFID = false;
     private bool _solPrincipale = false;
     private bool _MurGrimper = false;
+    private bool _detectionMur = false;
     private bool _doubleSaut = false;
     private bool _canjump = true;
     private bool _glisser = false;
-    private bool _retréci = false;
+    private bool _retreci = false;
 
     private Animator _animator;
 
@@ -74,6 +78,7 @@ public class Heroloury : MonoBehaviour
         _body = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _contact = GetComponent<Collider2D>();
+
     }
 
 
@@ -85,9 +90,9 @@ public class Heroloury : MonoBehaviour
             if (_doubleSautRFID == false)
             {
                 _doubleSautRFID = true;
-                Debug.Log(_doubleSautRFID);
+
                 _miniMoiRFID = false;
-                _retréci = false;
+                _retreci = false;
                 _toucheR.SetActive(false);
             }
         }
@@ -96,7 +101,7 @@ public class Heroloury : MonoBehaviour
             if (!_miniMoiRFID)
             {
                 _miniMoiRFID = true;
-                Debug.Log(_miniMoiRFID);
+
                 _doubleSautRFID = false;
                 _toucheR.SetActive(true);
             }
@@ -114,17 +119,30 @@ public class Heroloury : MonoBehaviour
 
         _solPrincipale = collider != null;
 
-        if (!_retréci)
+        if (!_retreci && _objectCheckWall != null)
         {
             Collider2D colliderGrimper = Physics2D.OverlapCircle(_wallCheck.position, 0.25f, _presenceMur);
 
             _MurGrimper = colliderGrimper != null;
         }
-        else
+        else if (_objectCheckWall != null)
         {
             Collider2D colliderGrimper = Physics2D.OverlapCircle(_wallCheck.position, 0.05f, _presenceMur);
 
             _MurGrimper = colliderGrimper != null;
+        }
+
+        if (!_retreci && _objectCheckWall != null)
+        {
+            Collider2D colliderGrimper = Physics2D.OverlapCircle(_wallCheck.position, 0.25f, _presenceSol);
+
+            _detectionMur = colliderGrimper != null;
+        }
+        else if (_objectCheckWall != null)
+        {
+            Collider2D colliderGrimper = Physics2D.OverlapCircle(_wallCheck.position, 0.05f, _presenceSol);
+
+            _detectionMur = colliderGrimper != null;
         }
 
 
@@ -134,18 +152,16 @@ public class Heroloury : MonoBehaviour
 
         _champignon = colliderChampignon != null;
 
-        if (!_retréci)
+        if (!_retreci && _objectCheckRebord != null)
         {
             Collider2D colliderMonter = Physics2D.OverlapCircle(_rebordCheck.position, 0.25f, _presenceSol);
             _rebord = colliderMonter != null;
         }
-        else
+        else if (_objectCheckRebord != null)
         {
             Collider2D colliderMonter = Physics2D.OverlapCircle(_rebordCheck.position, 0.05f, _presenceSol);
             _rebord = colliderMonter != null;
         }
-
-
 
 
 
@@ -169,24 +185,23 @@ public class Heroloury : MonoBehaviour
         _courir = Input.GetAxisRaw("Courir") != 0;
         _grimper = Input.GetAxisRaw("Grimper") != 0;
 
-        if (_hDirection != 0 && !_retréci)
+        if (_hDirection != 0 && !_retreci)
         {
             transform.localScale = new Vector3(_hDirection, _tailleNormale, 1);
         }
-        else if (_hDirection != 0 && _retréci)
+        else if (_hDirection != 0 && _retreci)
         {
-            transform.localScale = new Vector3(_hDirection * _tailleRétrécie, _tailleRétrécie, 1f);
+            transform.localScale = new Vector3(_hDirection * _tailleRetrecie, _tailleRetrecie, 1f);
         }
 
-        Debug.Log("Mur :" + _MurGrimper);
-        Debug.Log("Rebord :" + _rebord);
+
 
         if (Input.GetButtonDown("Sauter"))
         {
 
             if (_canjump && !_doubleSautRFID && (_solPrincipale || _joueurSurPlateforme))
             {
-                Debug.Log("Wesh");
+
                 _canjump = false;
                 _solPrincipale = false;
                 _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
@@ -194,7 +209,7 @@ public class Heroloury : MonoBehaviour
 
             if (_doubleSautRFID)
             {
-                Debug.Log("Double");
+
 
                 if (_canjump)
                 {
@@ -243,27 +258,32 @@ public class Heroloury : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.R))
             {
-                _retréci = !_retréci;
+                _retreci = !_retreci;
             }
         }
 
         //Monter automatiquement les trottoirs
 
-        if (_solPrincipale && _rebord && !_MurGrimper)
+        if (_solPrincipale && _rebord && !_detectionMur)
         {
             transform.position = new Vector2(transform.position.x, transform.position.y + (jumpDistance * transform.localScale.y));
         }
-        //Animation
+
 
 
         if (!_Coeur1.activeSelf && !_Coeur2.activeSelf && !_Coeur3.activeSelf && _contact.enabled == true)
         {
             _body.velocity = new Vector2(_body.velocity.x, _puissanceChampignon);
             _contact.enabled = false;
-            _objectCheckGround.SetActive(false);
-            _objectCheckWall.SetActive(false);
-            _objectCheckRebord.SetActive(false);
+            _camera.GetComponent<CinemachineVirtualCamera>().Follow = null;
+            // Destroy(_objectCheckGround);
+            Destroy(_objectCheckWall);
+            Destroy(_objectCheckRebord);
         }
+
+
+        //Animation
+
         _animator.SetBool("Marcher", _hDirection != 0 && !_courir);
         _animator.SetBool("Courir", _hDirection != 0 && _courir);
         _animator.SetFloat("VelocityY", _body.velocity.y);
@@ -284,9 +304,9 @@ public class Heroloury : MonoBehaviour
 
         }
 
-        if (_retréci)
+        if (_retreci)
         {
-            transform.localScale = new Vector3(_tailleRétrécie, _tailleRétrécie, 1f);
+            transform.localScale = new Vector3(_tailleRetrecie, _tailleRetrecie, 1f);
 
         }
         else
@@ -297,7 +317,7 @@ public class Heroloury : MonoBehaviour
         if (_solPrincipale || _joueurSurPlateforme)
         {
             _canjump = true;
-            Debug.Log(_solPrincipale);
+
         }
 
 
@@ -305,4 +325,5 @@ public class Heroloury : MonoBehaviour
 
 
     }
+
 }
