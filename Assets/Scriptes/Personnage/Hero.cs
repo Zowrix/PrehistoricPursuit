@@ -275,6 +275,10 @@ public class Hero : MonoBehaviour
         _animator.SetFloat("VelocityY", _body.velocity.y);
         _animator.SetBool("Sol", _solPrincipale);
 
+        if (_hDirection != 0)
+        {
+            transform.localScale = new Vector3(_hDirection, 1, 1);
+        }
 
     }
 
