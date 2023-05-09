@@ -17,6 +17,11 @@ public class Hero : MonoBehaviour
     [SerializeField] private float _tailleNormale = 1f;
     [SerializeField] private float _tailleRetrecie = 0.5f;
     [SerializeField] private GameObject _toucheR;
+    [SerializeField] private GameObject _space;
+    [SerializeField] private GameObject _normalTouche;
+
+
+
     [Header("Check")]
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private LayerMask _presenceSol;
@@ -71,6 +76,10 @@ public class Hero : MonoBehaviour
     private Animator _animator;
 
 
+    [Header("regard")]
+    [SerializeField] private SpriteRenderer _spriteRenderer;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -93,6 +102,9 @@ public class Hero : MonoBehaviour
                 _miniMoiRFID = false;
                 _retreci = false;
                 _toucheR.SetActive(false);
+                _space.SetActive(true);
+                _normalTouche.SetActive(true);
+
             }
         }
         else if (id == " 162 82 121 26")
@@ -103,8 +115,15 @@ public class Hero : MonoBehaviour
 
                 _doubleSautRFID = false;
                 _toucheR.SetActive(true);
+                _space.SetActive(false);
+                _normalTouche.SetActive(true);
             }
 
+        }
+        else if (Input.GetKeyDown(KeyCode.Z) && (_miniMoiRFID || _doubleSaut))
+        {
+
+            _normalTouche.SetActive(false);
         }
         else
         {
@@ -278,12 +297,27 @@ public class Hero : MonoBehaviour
         if (_hDirection != 0)
         {
             transform.localScale = new Vector3(_hDirection, 1, 1);
+
+            /*if (_hDirection > 0)
+            {
+                // Si le personnage va à droite, retourner le sprite horizontalement vers la droite
+                _spriteRenderer.flipX = false;
+            }
+            else if (_hDirection < 0)
+            {
+                // Si le personnage va à gauche, retourner le sprite horizontalement vers la gauche
+                _spriteRenderer.flipX = true;
+            }*/
         }
+
+
+
 
     }
 
     private void FixedUpdate()
     {
+
         if (!_courir)
         {
             _body.velocity = new Vector2(_vitesseMarche * _hDirection, _body.velocity.y);
