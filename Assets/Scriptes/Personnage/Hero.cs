@@ -76,7 +76,13 @@ public class Hero : MonoBehaviour
     private bool _glisser = false;
     private bool _retreci = false;
 
+
+
+
+
     private Animator _animator;
+
+    public SwitchPosition switchPosition;
 
 
     [Header("regard")]
@@ -132,6 +138,7 @@ public class Hero : MonoBehaviour
             _doubleSautRFID = false;
             _space.SetActive(false);
         }
+
         else
         {
             Debug.Log(id);
@@ -322,8 +329,23 @@ public class Hero : MonoBehaviour
 
         //Animation
 
-        _animator.SetBool("Marcher", _hDirection != 0 && !_courir);
-        _animator.SetBool("Courir", _hDirection != 0 && _courir);
+        if (_doubleSautRFID)
+        {
+            _animator.SetBool("MarcherDoubleSaut", _hDirection != 0 && !_courir);
+            _animator.SetBool("CourirDoubleSaut", _hDirection != 0 && _courir);
+            _animator.SetBool("IdleDoubleSaut", true);
+
+        }
+        else
+        {
+            _animator.SetBool("Marcher", _hDirection != 0 && !_courir);
+            _animator.SetBool("Courir", _hDirection != 0 && _courir);
+            _animator.SetBool("IdleDoubleSaut", false);
+
+        }
+
+
+
         _animator.SetFloat("VelocityY", _body.velocity.y);
         _animator.SetBool("Sol", _solPrincipale);
 

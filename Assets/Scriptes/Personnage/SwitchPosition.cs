@@ -8,22 +8,32 @@ public class SwitchPosition : MonoBehaviour
 
     public GameObject _cible;
 
-    private bool _canSwitch = false;
+    public bool _canSwitch = false;
+
+    public bool _rfidSwitch = false;
+
+    public void LancementenFonctionDuId(string id)
+    {
+        if (id == " 245 251 137 172")
+        {
+            _rfidSwitch = true;
+        }
+    }
+
     public void SwitchPlayerPosition(GameObject enemy)
     {
-        if (_canSwitch)
-        {
-            GameObject _clickedEnemy = enemy;
 
-            Vector3 _temPos = _hero.transform.position;
-            _hero.transform.position = _clickedEnemy.transform.position;
-            _clickedEnemy.transform.position = _temPos;
-        }
+        GameObject _clickedEnemy = enemy;
+
+        Vector3 _temPos = _hero.transform.position;
+        _hero.transform.position = _clickedEnemy.transform.position;
+        _clickedEnemy.transform.position = _temPos;
+
     }
 
     void OnMouseDown()
     {
-        if (_canSwitch)
+        if (_rfidSwitch)
         {
             GameObject _clickedEnemy = gameObject;
 
@@ -33,18 +43,15 @@ public class SwitchPosition : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (_rfidSwitch)
         {
-            _canSwitch = !_canSwitch;
+            _canSwitch = true;
 
-            if (_canSwitch)
-            {
-                _cible.SetActive(true);
-            }
-            else
-            {
-                _cible.SetActive(false);
-            }
+            _cible.SetActive(true);
+
         }
+
+        Debug.Log("Can" + _rfidSwitch);
     }
+
 }
