@@ -8,7 +8,9 @@ public class Heroloury : MonoBehaviour
     [Header("Marche/course")]
     [SerializeField] private float _vitesseMarche = 5f;
     [SerializeField] private float _vitesseCourse = 5f;
-    private float _hDirection = 0;
+    [SerializeField] private float _hDirection = 0;
+
+
     private float _vDirection = 0;
 
     [SerializeField] private float _puissanceSaut = 7f;
@@ -52,6 +54,7 @@ public class Heroloury : MonoBehaviour
     public delegate void OnPlayerExitMushroom();
     public static event OnPlayerExitMushroom onPlayerExitMushroom;
 
+
     [Header("Camera")]
     [SerializeField] private GameObject _camera;
 
@@ -68,7 +71,8 @@ public class Heroloury : MonoBehaviour
     private bool _canjump = true;
     private bool _glisser = false;
     private bool _retreci = false;
-
+    private bool _isDead = false;
+    private float _lastHDirection;
     private Animator _animator;
 
 
@@ -177,6 +181,16 @@ public class Heroloury : MonoBehaviour
         }
         _joueurSurPlateforme = colliderPlatform != null;
 
+        if (_joueurSurPlateforme)
+        {
+            _animator.SetBool("plateforme", true);
+        }
+        else
+        {
+            _animator.SetBool("plateforme", false);
+
+        }
+
 
         _hDirection = Input.GetAxisRaw("Horizontal");
         _vDirection = Input.GetAxis("Vertical");
@@ -188,10 +202,12 @@ public class Heroloury : MonoBehaviour
         if (_hDirection != 0 && !_retreci)
         {
             transform.localScale = new Vector3(_hDirection, _tailleNormale, 1);
+            _lastHDirection = _hDirection;
         }
         else if (_hDirection != 0 && _retreci)
         {
             transform.localScale = new Vector3(_hDirection * _tailleRetrecie, _tailleRetrecie, 1f);
+            _lastHDirection = _hDirection;
         }
 
 
@@ -264,23 +280,31 @@ public class Heroloury : MonoBehaviour
 
         //Monter automatiquement les trottoirs
 
-        if (_solPrincipale && _rebord && !_detectionMur)
+
+        if (_solPrincipale && _rebord && !_detectionMur && !_isDead)
         {
-            transform.position = new Vector2(transform.position.x, transform.position.y + (jumpDistance * transform.localScale.y));
+
+            transform.position = new Vector2(transform.position.x + _lastHDirection / 1.5f, transform.position.y + (jumpDistance * transform.localScale.y));
+
+
         }
 
 
 
         if (!_Coeur1.activeSelf && !_Coeur2.activeSelf && !_Coeur3.activeSelf && _contact.enabled == true)
         {
+            _isDead = true;
             _body.velocity = new Vector2(_body.velocity.x, _puissanceChampignon);
             _contact.enabled = false;
             _camera.GetComponent<CinemachineVirtualCamera>().Follow = null;
-            // Destroy(_objectCheckGround);
-            Destroy(_objectCheckWall);
-            Destroy(_objectCheckRebord);
+
         }
 
+        if (_isDead)
+        {
+            _isDead = false;
+            StartCoroutine(Respawn(5f));
+        }
 
         //Animation
 
@@ -292,13 +316,32 @@ public class Heroloury : MonoBehaviour
 
     }
 
+    private IEnumerator Respawn(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+
+        _Coeur1.SetActive(true);
+        _Coeur2.SetActive(true);
+        _Coeur3.SetActive(true);
+        float playerX = PlayerPrefs.GetFloat("PlayerX");
+        float playerY = PlayerPrefs.GetFloat("PlayerY");
+        float playerZ = PlayerPrefs.GetFloat("PlayerZ");
+        transform.position = new Vector3(playerX, playerY, playerZ);
+        _body.velocity = new Vector3(0, 0, 0);
+        _contact.enabled = true;
+        _camera.GetComponent<CinemachineVirtualCamera>().Follow = transform;
+
+
+    }
+
     private void FixedUpdate()
     {
-        if (!_courir)
+        if (!_courir && !_isDead)
         {
             _body.velocity = new Vector2(_vitesseMarche * _hDirection, _body.velocity.y);
         }
-        else
+        else if (!_isDead)
         {
             _body.velocity = new Vector2(_vitesseCourse * _hDirection, _body.velocity.y);
 
