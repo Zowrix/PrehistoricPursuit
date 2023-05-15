@@ -8,9 +8,7 @@ public class Heroloury : MonoBehaviour
     [Header("Marche/course")]
     [SerializeField] private float _vitesseMarche = 5f;
     [SerializeField] private float _vitesseCourse = 5f;
-    [SerializeField] private float _hDirection = 0;
-
-
+    private float _hDirection = 0;
     private float _vDirection = 0;
 
     [SerializeField] private float _puissanceSaut = 7f;
@@ -19,6 +17,11 @@ public class Heroloury : MonoBehaviour
     [SerializeField] private float _tailleNormale = 1f;
     [SerializeField] private float _tailleRetrecie = 0.5f;
     [SerializeField] private GameObject _toucheR;
+    [SerializeField] private GameObject _space;
+    [SerializeField] private GameObject _normalTouche;
+
+
+
     [Header("Check")]
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private LayerMask _presenceSol;
@@ -54,7 +57,6 @@ public class Heroloury : MonoBehaviour
     public delegate void OnPlayerExitMushroom();
     public static event OnPlayerExitMushroom onPlayerExitMushroom;
 
-
     [Header("Camera")]
     [SerializeField] private GameObject _camera;
 
@@ -65,15 +67,21 @@ public class Heroloury : MonoBehaviour
     private bool _doubleSautRFID = false;
     private bool _miniMoiRFID = false;
     private bool _solPrincipale = false;
-    private bool _MurGrimper = false;
     private bool _detectionMur = false;
+    private bool _isDead = false;
+    private float _lastHDirection;
+    private bool _MurGrimper = false;
     private bool _doubleSaut = false;
     private bool _canjump = true;
     private bool _glisser = false;
     private bool _retreci = false;
-    private bool _isDead = false;
-    private float _lastHDirection;
+    private bool _isPlayerCanMove = true;
+
     private Animator _animator;
+
+
+    [Header("regard")]
+    [SerializeField] private SpriteRenderer _spriteRenderer;
 
 
     // Start is called before the first frame update
@@ -98,6 +106,9 @@ public class Heroloury : MonoBehaviour
                 _miniMoiRFID = false;
                 _retreci = false;
                 _toucheR.SetActive(false);
+                _space.SetActive(true);
+                _normalTouche.SetActive(true);
+
             }
         }
         else if (id == " 162 82 121 26")
@@ -108,8 +119,17 @@ public class Heroloury : MonoBehaviour
 
                 _doubleSautRFID = false;
                 _toucheR.SetActive(true);
+                _space.SetActive(false);
+                _normalTouche.SetActive(true);
             }
 
+        }
+        else if (id == " 53 222 161 172")
+        {
+
+            _normalTouche.SetActive(false);
+            _doubleSautRFID = false;
+            _space.SetActive(false);
         }
         else
         {
@@ -139,16 +159,13 @@ public class Heroloury : MonoBehaviour
         if (!_retreci && _objectCheckWall != null)
         {
             Collider2D colliderGrimper = Physics2D.OverlapCircle(_wallCheck.position, 0.25f, _presenceSol);
-
             _detectionMur = colliderGrimper != null;
         }
         else if (_objectCheckWall != null)
         {
             Collider2D colliderGrimper = Physics2D.OverlapCircle(_wallCheck.position, 0.05f, _presenceSol);
-
             _detectionMur = colliderGrimper != null;
         }
-
 
 
 
@@ -188,9 +205,7 @@ public class Heroloury : MonoBehaviour
         else
         {
             _animator.SetBool("plateforme", false);
-
         }
-
 
         _hDirection = Input.GetAxisRaw("Horizontal");
         _vDirection = Input.GetAxis("Vertical");
@@ -199,128 +214,151 @@ public class Heroloury : MonoBehaviour
         _courir = Input.GetAxisRaw("Courir") != 0;
         _grimper = Input.GetAxisRaw("Grimper") != 0;
 
-        if (_hDirection != 0 && !_retreci)
-        {
-            transform.localScale = new Vector3(_hDirection, _tailleNormale, 1);
-            _lastHDirection = _hDirection;
-        }
-        else if (_hDirection != 0 && _retreci)
-        {
-            transform.localScale = new Vector3(_hDirection * _tailleRetrecie, _tailleRetrecie, 1f);
-            _lastHDirection = _hDirection;
-        }
-
-
-
-        if (Input.GetButtonDown("Sauter"))
+        if (_isPlayerCanMove)
         {
 
-            if (_canjump && !_doubleSautRFID && (_solPrincipale || _joueurSurPlateforme))
+            if (_hDirection != 0 && !_retreci)
             {
-
-                _canjump = false;
-                _solPrincipale = false;
-                _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
+                transform.localScale = new Vector3(_hDirection, _tailleNormale, 1);
+                _lastHDirection = _hDirection;
+            }
+            else if (_hDirection != 0 && _retreci)
+            {
+                transform.localScale = new Vector3(_hDirection * _tailleRetrecie, _tailleRetrecie, 1f);
+                _lastHDirection = _hDirection;
             }
 
-            if (_doubleSautRFID)
+
+
+            if (Input.GetButtonDown("Sauter"))
             {
 
-
-                if (_canjump)
+                if (_canjump && !_doubleSautRFID && (_solPrincipale || _joueurSurPlateforme))
                 {
+
                     _canjump = false;
-                    _doubleSaut = true;
+                    _solPrincipale = false;
                     _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
                 }
 
-                if (_doubleSaut)
+                if (_doubleSautRFID)
                 {
-                    _doubleSaut = false;
-                    _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
+
+
+                    if (_canjump)
+                    {
+                        _canjump = false;
+                        _doubleSaut = true;
+                        _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
+                    }
+
+                    if (_doubleSaut)
+                    {
+                        _doubleSaut = false;
+                        _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
+                    }
                 }
             }
-        }
 
-        if (_champignon)
-        {
-            _canjump = false;
-            if (_doubleSautRFID)
-            { _doubleSaut = true; }
-
-            _body.velocity = new Vector2(_body.velocity.x, _puissanceChampignon);
-            onPlayerTouchingMushroom?.Invoke();
-        }
-        else
-        {
-            onPlayerExitMushroom?.Invoke();
-        }
-
-        if (_MurGrimper && !_solPrincipale)
-        {
-            _glisser = true;
-        }
-        else
-        {
-            _glisser = false;
-        }
-
-        if (_glisser)
-        {
-            _body.velocity = new Vector2(0, _vitesseSlide * _vDirection);
-        }
-
-        if (_miniMoiRFID)
-        {
-            if (Input.GetKeyDown(KeyCode.R))
+            if (_champignon)
             {
-                _retreci = !_retreci;
+                _canjump = false;
+                if (_doubleSautRFID)
+                { _doubleSaut = true; }
+
+                _body.velocity = new Vector2(_body.velocity.x, _puissanceChampignon);
+                onPlayerTouchingMushroom?.Invoke();
             }
+            else
+            {
+                onPlayerExitMushroom?.Invoke();
+            }
+
+            if (_MurGrimper && !_solPrincipale)
+            {
+                _glisser = true;
+            }
+            else
+            {
+                _glisser = false;
+            }
+
+            if (_glisser)
+            {
+                _body.velocity = new Vector2(0, _vitesseSlide * _vDirection);
+            }
+
+            if (_miniMoiRFID)
+            {
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    _retreci = !_retreci;
+                }
+            }
+
+            //Monter automatiquement les trottoirs
+
+            if (_solPrincipale && _rebord && !_detectionMur && !_isDead)
+            {
+                transform.position = new Vector2(transform.position.x + _lastHDirection / 1.5f, transform.position.y + (jumpDistance * transform.localScale.y));
+            }
+
+
+
+            if (!_Coeur1.activeSelf && !_Coeur2.activeSelf && !_Coeur3.activeSelf && _contact.enabled == true)
+            {
+                _isDead = true;
+                _body.velocity = new Vector2(_body.velocity.x, _puissanceChampignon);
+                _contact.enabled = false;
+                _camera.GetComponent<CinemachineVirtualCamera>().Follow = null;
+            }
+
+            if (_isDead)
+            {
+                _isDead = false;
+                StartCoroutine(Respawn(5f));
+            }
+
+
+
+
+            //Animation
+
+            _animator.SetBool("Marcher", _hDirection != 0 && !_courir);
+            _animator.SetBool("Courir", _hDirection != 0 && _courir);
+            _animator.SetFloat("VelocityY", _body.velocity.y);
+            _animator.SetBool("Sol", _solPrincipale);
+
+
+            if (_hDirection != 0)
+            {
+                transform.localScale = new Vector3(_hDirection, 1, 1);
+
+                /*if (_hDirection > 0)
+                {
+                    // Si le personnage va à droite, retourner le sprite horizontalement vers la droite
+                    _spriteRenderer.flipX = false;
+                }
+                else if (_hDirection < 0)
+                {
+                    // Si le personnage va à gauche, retourner le sprite horizontalement vers la gauche
+                    _spriteRenderer.flipX = true;
+                }*/
+            }
+
+
+
         }
-
-        //Monter automatiquement les trottoirs
-
-
-        if (_solPrincipale && _rebord && !_detectionMur && !_isDead)
+        else
         {
-
-            transform.position = new Vector2(transform.position.x + _lastHDirection / 1.5f, transform.position.y + (jumpDistance * transform.localScale.y));
-
-
+            _animator.SetBool("Marcher", false);
+            _animator.SetBool("Courir", false);
         }
-
-
-
-        if (!_Coeur1.activeSelf && !_Coeur2.activeSelf && !_Coeur3.activeSelf && _contact.enabled == true)
-        {
-            _isDead = true;
-            _body.velocity = new Vector2(_body.velocity.x, _puissanceChampignon);
-            _contact.enabled = false;
-            _camera.GetComponent<CinemachineVirtualCamera>().Follow = null;
-
-        }
-
-        if (_isDead)
-        {
-            _isDead = false;
-            StartCoroutine(Respawn(5f));
-        }
-
-        //Animation
-
-        _animator.SetBool("Marcher", _hDirection != 0 && !_courir);
-        _animator.SetBool("Courir", _hDirection != 0 && _courir);
-        _animator.SetFloat("VelocityY", _body.velocity.y);
-        _animator.SetBool("Sol", _solPrincipale);
-
-
     }
 
     private IEnumerator Respawn(float delay)
     {
         yield return new WaitForSeconds(delay);
-
-
         _Coeur1.SetActive(true);
         _Coeur2.SetActive(true);
         _Coeur3.SetActive(true);
@@ -331,42 +369,50 @@ public class Heroloury : MonoBehaviour
         _body.velocity = new Vector3(0, 0, 0);
         _contact.enabled = true;
         _camera.GetComponent<CinemachineVirtualCamera>().Follow = transform;
-
-
     }
-
     private void FixedUpdate()
     {
-        if (!_courir && !_isDead)
+        if (_isPlayerCanMove)
         {
-            _body.velocity = new Vector2(_vitesseMarche * _hDirection, _body.velocity.y);
-        }
-        else if (!_isDead)
-        {
-            _body.velocity = new Vector2(_vitesseCourse * _hDirection, _body.velocity.y);
+            if (!_courir && !_isDead)
+            {
+                _body.velocity = new Vector2(_vitesseMarche * _hDirection, _body.velocity.y);
+            }
+            else if (!_isDead)
+            {
+                _body.velocity = new Vector2(_vitesseCourse * _hDirection, _body.velocity.y);
 
-        }
+            }
 
-        if (_retreci)
-        {
-            transform.localScale = new Vector3(_tailleRetrecie, _tailleRetrecie, 1f);
+            if (_retreci)
+            {
+                transform.localScale = new Vector3(_tailleRetrecie, _tailleRetrecie, 1f);
+
+            }
+            else
+            {
+                transform.localScale = new Vector3(_tailleNormale, _tailleNormale, 1f);
+            }
+
+            if (_solPrincipale || _joueurSurPlateforme)
+            {
+                _canjump = true;
+
+            }
 
         }
         else
         {
-            transform.localScale = new Vector3(_tailleNormale, _tailleNormale, 1f);
+
+            _body.velocity = new Vector2(0, 0);
         }
-
-        if (_solPrincipale || _joueurSurPlateforme)
-        {
-            _canjump = true;
-
-        }
-
-
 
 
 
     }
 
+    public void ReceivedataCam(bool receivedValue)
+    {
+        _isPlayerCanMove = receivedValue;
+    }
 }

@@ -10,6 +10,7 @@ TagManager:
   - breakable
   - Sol
   - Obstacle
+  - piege
   layers:
   - Default
   - TransparentFX

@@ -5,6 +5,7 @@ public class SlideshowController : MonoBehaviour
     private int currentSlideIndex = 0;
     private Transform[] slideImages;
     private bool slideshowActive = true;
+    [SerializeField] private GameObject _txtCallToAction;
 
     private void Start()
     {
@@ -81,5 +82,7 @@ public class SlideshowController : MonoBehaviour
     private void DeactivateSlideImage(int index)
     {
         slideImages[index].gameObject.SetActive(false);
+        _txtCallToAction.SetActive(false);
+
     }
 }

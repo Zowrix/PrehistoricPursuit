@@ -12,6 +12,9 @@ public class Checkpoint : MonoBehaviour
             PlayerPrefs.SetFloat("PlayerX", other.transform.position.x);
             PlayerPrefs.SetFloat("PlayerY", other.transform.position.y);
             PlayerPrefs.SetFloat("PlayerZ", other.transform.position.z);
+            Debug.Log(PlayerPrefs.GetFloat("PlayerX"));
+            Debug.Log(PlayerPrefs.GetFloat("PlayerY"));
+            Debug.Log(PlayerPrefs.GetFloat("PlayerZ"));
 
             // active l'animation du spritesheet
             _animator.SetBool("IsCheckPointChecked", true);

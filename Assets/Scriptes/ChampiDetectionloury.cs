@@ -15,12 +15,18 @@ public class ChampiDetectionloury : MonoBehaviour
 
     private void ActivateMushroomAnimation()
     {
-        animator.SetBool("isChampiTrigger", true);
+        if (animator != null)
+        {
+            animator.SetBool("isChampiTrigger", true);
+        }
 
     }
 
     private void DeactivateMushroomAnimation()
     {
-        animator.SetBool("isChampiTrigger", false);
+        if (animator != null)
+        {
+            animator.SetBool("isChampiTrigger", false);
+        }
     }
 }

@@ -67,6 +67,9 @@ public class Hero : MonoBehaviour
     private bool _doubleSautRFID = false;
     private bool _miniMoiRFID = false;
     private bool _solPrincipale = false;
+    private bool _detectionMur = false;
+    private bool _isDead = false;
+    private float _lastHDirection;
     private bool _MurGrimper = false;
     private bool _doubleSaut = false;
     private bool _canjump = true;
@@ -120,10 +123,14 @@ public class Hero : MonoBehaviour
             }
 
         }
-        else if (Input.GetKeyDown(KeyCode.Z) && (_miniMoiRFID || _doubleSaut))
+        else if (id == " 53 222 161 172")
         {
 
+
+
             _normalTouche.SetActive(false);
+            _doubleSautRFID = false;
+            _space.SetActive(false);
         }
         else
         {
@@ -150,6 +157,16 @@ public class Hero : MonoBehaviour
             _MurGrimper = colliderGrimper != null;
         }
 
+        if (!_retreci && _objectCheckWall != null)
+        {
+            Collider2D colliderGrimper = Physics2D.OverlapCircle(_wallCheck.position, 0.25f, _presenceSol);
+            _detectionMur = colliderGrimper != null;
+        }
+        else if (_objectCheckWall != null)
+        {
+            Collider2D colliderGrimper = Physics2D.OverlapCircle(_wallCheck.position, 0.05f, _presenceSol);
+            _detectionMur = colliderGrimper != null;
+        }
 
 
 
@@ -182,6 +199,14 @@ public class Hero : MonoBehaviour
         }
         _joueurSurPlateforme = colliderPlatform != null;
 
+        if (_joueurSurPlateforme)
+        {
+            _animator.SetBool("plateforme", true);
+        }
+        else
+        {
+            _animator.SetBool("plateforme", false);
+        }
 
         _hDirection = Input.GetAxisRaw("Horizontal");
         _vDirection = Input.GetAxis("Vertical");
@@ -193,10 +218,12 @@ public class Hero : MonoBehaviour
         if (_hDirection != 0 && !_retreci)
         {
             transform.localScale = new Vector3(_hDirection, _tailleNormale, 1);
+            _lastHDirection = _hDirection;
         }
         else if (_hDirection != 0 && _retreci)
         {
             transform.localScale = new Vector3(_hDirection * _tailleRetrecie, _tailleRetrecie, 1f);
+            _lastHDirection = _hDirection;
         }
 
 
@@ -269,22 +296,28 @@ public class Hero : MonoBehaviour
 
         //Monter automatiquement les trottoirs
 
-        if (_solPrincipale && _rebord && !_MurGrimper)
+        if (_solPrincipale && _rebord && !_detectionMur && !_isDead)
         {
-            transform.position = new Vector2(transform.position.x, transform.position.y + (jumpDistance * transform.localScale.y));
+            transform.position = new Vector2(transform.position.x + _lastHDirection / 1.5f, transform.position.y + (jumpDistance * transform.localScale.y));
         }
 
 
 
         if (!_Coeur1.activeSelf && !_Coeur2.activeSelf && !_Coeur3.activeSelf && _contact.enabled == true)
         {
+            _isDead = true;
             _body.velocity = new Vector2(_body.velocity.x, _puissanceChampignon);
             _contact.enabled = false;
             _camera.GetComponent<CinemachineVirtualCamera>().Follow = null;
-            // Destroy(_objectCheckGround);
-            Destroy(_objectCheckWall);
-            Destroy(_objectCheckRebord);
         }
+
+        if (_isDead)
+        {
+            _isDead = false;
+            StartCoroutine(Respawn(5f));
+        }
+
+
 
 
         //Animation
@@ -293,6 +326,7 @@ public class Hero : MonoBehaviour
         _animator.SetBool("Courir", _hDirection != 0 && _courir);
         _animator.SetFloat("VelocityY", _body.velocity.y);
         _animator.SetBool("Sol", _solPrincipale);
+
 
         if (_hDirection != 0)
         {
@@ -315,14 +349,28 @@ public class Hero : MonoBehaviour
 
     }
 
+    private IEnumerator Respawn(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        _Coeur1.SetActive(true);
+        _Coeur2.SetActive(true);
+        _Coeur3.SetActive(true);
+        float playerX = PlayerPrefs.GetFloat("PlayerX");
+        float playerY = PlayerPrefs.GetFloat("PlayerY");
+        float playerZ = PlayerPrefs.GetFloat("PlayerZ");
+        transform.position = new Vector3(playerX, playerY, playerZ);
+        _body.velocity = new Vector3(0, 0, 0);
+        _contact.enabled = true;
+        _camera.GetComponent<CinemachineVirtualCamera>().Follow = transform;
+    }
     private void FixedUpdate()
     {
 
-        if (!_courir)
+        if (!_courir && !_isDead)
         {
             _body.velocity = new Vector2(_vitesseMarche * _hDirection, _body.velocity.y);
         }
-        else
+        else if (!_isDead)
         {
             _body.velocity = new Vector2(_vitesseCourse * _hDirection, _body.velocity.y);
 

@@ -70,6 +70,7 @@ public class BreakablePlatform : MonoBehaviour
     {
         // Réactive le Rigidbody2D pour faire revenir la plateforme
         transform.position = initialPosition;
+        transform.rotation = Quaternion.identity;
         rb2d.bodyType = RigidbodyType2D.Kinematic;
         gameObject.SetActive(true);
 

@@ -18,12 +18,32 @@ public class GameManager : BaseSingleton<GameManager>
 
     [Header("Personnage")]
     public Transform player;
+
+    private const string PREFS_INITIALIZED_KEY = "PrefsInitialized";
     // Start is called before the first frame update
+    private void Awake()
+    {
+        if (!PlayerPrefs.HasKey(PREFS_INITIALIZED_KEY))
+        {
+            // Initialiser les PlayerPrefs avec les valeurs souhaitées
+            PlayerPrefs.SetFloat("PlayerX", -75.40005f);
+            PlayerPrefs.SetFloat("PlayerY", 0.7376772f);
+            PlayerPrefs.SetFloat("PlayerZ", 0);
+
+            // Définir la clé PREFS_INITIALIZED_KEY pour indiquer que les PlayerPrefs sont maintenant initialisés
+            PlayerPrefs.SetInt(PREFS_INITIALIZED_KEY, 1);
+
+            // Sauvegarder les modifications des PlayerPrefs
+            PlayerPrefs.Save();
+        }
+    }
+
+
     void Start()
     {
 #if UNITY_EDITOR
 
-        return;
+
 #else
         float playerX = PlayerPrefs.GetFloat("PlayerX");
         float playerY = PlayerPrefs.GetFloat("PlayerY");
@@ -51,4 +71,5 @@ public class GameManager : BaseSingleton<GameManager>
         //activer le temps
         Time.timeScale = 1;
     }
+
 }

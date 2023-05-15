@@ -16,10 +16,6 @@ public class ApplicationManager : BaseSingleton<ApplicationManager>
 
     }
 
-    private void Awake()
-    {
-        autoDestroy = true;
-    }
 
     void Start()
     {
@@ -36,16 +32,16 @@ public class ApplicationManager : BaseSingleton<ApplicationManager>
     public void SwitchScene(int sceneBuildIndex)
     {
 
-        if (sceneBuildIndex == (int)Scenes.MENU)
-        {
-            Destroy(ApplicationManager.instance.gameObject);
+        //     if (sceneBuildIndex == (int)Scenes.MENU)
+        //   {
+        //         Destroy(ApplicationManager.instance.gameObject);
 
 
-        }
-        else if (sceneBuildIndex == (int)Scenes.GAME)
-        {
-            Destroy(GameManager.instance.gameObject);
-        }
+        //     }
+        //   else if (sceneBuildIndex == (int)Scenes.GAME)
+        // {
+        //   Destroy(GameManager.instance.gameObject);
+        //}
         SceneManager.LoadScene(sceneBuildIndex);
     }
 
@@ -63,5 +59,10 @@ public class ApplicationManager : BaseSingleton<ApplicationManager>
 #if UNITY_EDITOR
         }
 #endif
+    }
+
+    public void ResetPlayerPrefs()
+    {
+        PlayerPrefs.DeleteAll();
     }
 }
