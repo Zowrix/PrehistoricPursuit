@@ -8,6 +8,7 @@
 
 using UnityEngine;
 using System.Threading;
+using System.IO.Ports;
 
 /**
  * This class allows a Unity program to continually check for messages from a
@@ -26,7 +27,7 @@ using System.Threading;
 public class SerialController : MonoBehaviour
 {
     [Tooltip("Port name with which the SerialPort object will be created.")]
-    public string portName = "COM4";
+    public string portName;
 
     [Tooltip("Baud rate that the serial device is using to transmit data.")]
     public int baudRate = 9600;
@@ -54,7 +55,7 @@ public class SerialController : MonoBehaviour
     // Internal reference to the Thread and the object that runs in it.
     protected Thread thread;
     protected SerialThreadLines serialThread;
-
+    private SerialPort serialPort;
 
     // ------------------------------------------------------------------------
     // Invoked whenever the SerialController gameobject is activated.
@@ -105,8 +106,10 @@ public class SerialController : MonoBehaviour
     // special messages that mark the start/end of the communication with the
     // device.
     // ------------------------------------------------------------------------
+
     void Update()
     {
+
         // If the user prefers to poll the messages instead of receiving them
         // via SendMessage, then the message listener should be null.
         if (messageListener == null)

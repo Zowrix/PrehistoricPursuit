@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using static Hero;
 using UnityEngine;
 
 public class SwitchPosition : MonoBehaviour
@@ -8,16 +9,20 @@ public class SwitchPosition : MonoBehaviour
 
     public GameObject _cible;
 
-    public bool _canSwitch = false;
 
-    public bool _rfidSwitch = false;
 
-    public void LancementenFonctionDuId(string id)
+
+    void Update()
     {
-        if (id == " 245 251 137 172")
+        Debug.Log(Hero._rfidSwitchHero);
+        if (Hero._rfidSwitchHero)
         {
-            _rfidSwitch = true;
+
+            Debug.Log(Hero._rfidSwitchHero);
+            _cible.SetActive(true);
+
         }
+
     }
 
     public void SwitchPlayerPosition(GameObject enemy)
@@ -33,25 +38,15 @@ public class SwitchPosition : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (_rfidSwitch)
+        if (Hero._rfidSwitchHero)
         {
+
             GameObject _clickedEnemy = gameObject;
 
             SwitchPlayerPosition(_clickedEnemy);
         }
     }
 
-    void Update()
-    {
-        if (_rfidSwitch)
-        {
-            _canSwitch = true;
 
-            _cible.SetActive(true);
-
-        }
-
-        Debug.Log("Can" + _rfidSwitch);
-    }
 
 }
