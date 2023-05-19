@@ -2060,6 +2060,10 @@ PrefabInstance:
       value: SerialController
       objectReference: {fileID: 0}
     - target: {fileID: 4645418841140375207, guid: e055dfa2db5f3314e9f6c1fc060c287e, type: 3}
+      propertyPath: portName
+      value: COM4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4645418841140375207, guid: e055dfa2db5f3314e9f6c1fc060c287e, type: 3}
       propertyPath: messageListener
       value: 
       objectReference: {fileID: 1988849769}

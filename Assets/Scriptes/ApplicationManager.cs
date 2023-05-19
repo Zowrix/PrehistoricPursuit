@@ -55,7 +55,7 @@ public class ApplicationManager : BaseSingleton<ApplicationManager>
         else
         {
 #endif
-            Application.Quit();
+        Application.Quit();
 #if UNITY_EDITOR
         }
 #endif
