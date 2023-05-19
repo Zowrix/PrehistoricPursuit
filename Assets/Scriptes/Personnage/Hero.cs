@@ -18,7 +18,6 @@ public class Hero : MonoBehaviour
     [SerializeField] private float _tailleRetrecie = 0.5f;
     [SerializeField] private GameObject _toucheR;
     [SerializeField] private GameObject _space;
-    [SerializeField] private GameObject _normalTouche;
 
 
 
@@ -75,18 +74,11 @@ public class Hero : MonoBehaviour
     private bool _canjump = true;
     private bool _glisser = false;
     private bool _retreci = false;
-
-
-
-
+    public static bool _rfidSwitchHero = false;
 
     private Animator _animator;
 
     public SwitchPosition switchPosition;
-
-
-    [Header("regard")]
-    [SerializeField] private SpriteRenderer _spriteRenderer;
 
 
     // Start is called before the first frame update
@@ -112,7 +104,6 @@ public class Hero : MonoBehaviour
                 _retreci = false;
                 _toucheR.SetActive(false);
                 _space.SetActive(true);
-                _normalTouche.SetActive(true);
 
             }
         }
@@ -125,18 +116,19 @@ public class Hero : MonoBehaviour
                 _doubleSautRFID = false;
                 _toucheR.SetActive(true);
                 _space.SetActive(false);
-                _normalTouche.SetActive(true);
             }
 
         }
         else if (id == " 53 222 161 172")
         {
-
-
-
-            _normalTouche.SetActive(false);
             _doubleSautRFID = false;
             _space.SetActive(false);
+        }
+        else if (id == " 245 251 137 172")
+        {
+            _rfidSwitchHero = true;
+            Debug.Log("Je fonctionne");
+
         }
 
         else
@@ -245,6 +237,10 @@ public class Hero : MonoBehaviour
                 _solPrincipale = false;
                 _body.velocity = new Vector2(_body.velocity.x, _puissanceSaut);
             }
+            if (!_solPrincipale)
+            {
+
+            }
 
             if (_doubleSautRFID)
             {
@@ -324,9 +320,6 @@ public class Hero : MonoBehaviour
             StartCoroutine(Respawn(5f));
         }
 
-
-
-
         //Animation
 
         if (_doubleSautRFID)
@@ -344,30 +337,8 @@ public class Hero : MonoBehaviour
 
         }
 
-
-
         _animator.SetFloat("VelocityY", _body.velocity.y);
         _animator.SetBool("Sol", _solPrincipale);
-
-
-        if (_hDirection != 0)
-        {
-            transform.localScale = new Vector3(_hDirection, 1, 1);
-
-            /*if (_hDirection > 0)
-            {
-                // Si le personnage va à droite, retourner le sprite horizontalement vers la droite
-                _spriteRenderer.flipX = false;
-            }
-            else if (_hDirection < 0)
-            {
-                // Si le personnage va à gauche, retourner le sprite horizontalement vers la gauche
-                _spriteRenderer.flipX = true;
-            }*/
-        }
-
-
-
 
     }
 
@@ -413,10 +384,6 @@ public class Hero : MonoBehaviour
             _canjump = true;
 
         }
-
-
-
-
 
     }
 }
