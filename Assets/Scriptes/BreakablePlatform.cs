@@ -46,7 +46,7 @@ public class BreakablePlatform : MonoBehaviour
             Invoke("Fall", fallDelay);
         }
 
-        if (collision.collider.CompareTag("Sol"))
+        if (!collision.collider.CompareTag("Player"))
         {
             particle.transform.position = transform.position;
             particle.Play();

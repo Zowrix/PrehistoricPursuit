@@ -9,6 +9,7 @@ public class SlideshowController : MonoBehaviour
 
     private void Start()
     {
+        _txtCallToAction.SetActive(true);
 
         slideImages = new Transform[transform.childCount];
         for (int i = 0; i < transform.childCount; i++)
