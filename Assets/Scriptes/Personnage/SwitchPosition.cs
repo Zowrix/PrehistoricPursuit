@@ -10,8 +10,6 @@ public class SwitchPosition : MonoBehaviour
     public GameObject _cible;
 
 
-
-
     void Update()
     {
         Debug.Log(Hero._rfidSwitchHero);
