@@ -61,11 +61,13 @@ public class Heroloury : MonoBehaviour
     [SerializeField] private GameObject _camera;
 
     [SerializeField] private bool _joueurSurPlateforme = false;
+    public bool _test = false;
+    public static bool _doubleSautRFID = false;
+    public static bool _miniMoiRFID = false;
     private bool _courir = false;
     private bool _grimper = false;
     private bool _rebord = false;
-    private bool _doubleSautRFID = false;
-    private bool _miniMoiRFID = false;
+
     private bool _solPrincipale = false;
     private bool _detectionMur = false;
     private bool _isDead = false;
@@ -107,7 +109,7 @@ public class Heroloury : MonoBehaviour
                 _retreci = false;
                 _toucheR.SetActive(false);
                 _space.SetActive(true);
-                _normalTouche.SetActive(true);
+
 
             }
         }
@@ -120,7 +122,7 @@ public class Heroloury : MonoBehaviour
                 _doubleSautRFID = false;
                 _toucheR.SetActive(true);
                 _space.SetActive(false);
-                _normalTouche.SetActive(true);
+
             }
 
         }
@@ -167,7 +169,12 @@ public class Heroloury : MonoBehaviour
             _detectionMur = colliderGrimper != null;
         }
 
+        if (_test)
+        {
 
+            _doubleSautRFID = true;
+
+        }
 
         Collider2D colliderChampignon = Physics2D.OverlapCircle(_groundCheck.position, 0.25f, _champignonCheck);
 
@@ -286,6 +293,7 @@ public class Heroloury : MonoBehaviour
             if (_glisser)
             {
                 _body.velocity = new Vector2(0, _vitesseSlide * _vDirection);
+                Debug.Log("s'accroche");
             }
 
             if (_miniMoiRFID)

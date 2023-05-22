@@ -42,13 +42,13 @@ public class ChangeCameraPosition : MonoBehaviour
                     SpriteCompy.flipX = true;
                 }
 
-                if (_timer >= 4f)
+                if (_timer >= 3f)
                 {
                     CameraProperties.Follow = null;
                     AnimationCompy.SetBool("Course", true);
                     RigidbodyCompy.velocity = new Vector2(movementSpeed, RigidbodyCompy.velocity.y);
                 }
-                if (_timer >= 6f)
+                if (_timer >= 5f)
                 {
                     _shouldActivateBool = true;
                     Compy.SetActive(false);
